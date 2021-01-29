@@ -19,6 +19,7 @@ public class RegistrationInGameRequest {
     private String partnerTwoName;
 
     private String partnerThreeName;
+    private String partnerNameFour;
 
 
 

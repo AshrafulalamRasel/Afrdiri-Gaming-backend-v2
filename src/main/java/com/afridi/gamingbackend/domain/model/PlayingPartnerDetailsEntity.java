@@ -29,6 +29,7 @@ public class PlayingPartnerDetailsEntity {
     private String partnerTwoName;
 
     private String partnerThreeName;
+    private String partnerNameFour;
 
 
 }

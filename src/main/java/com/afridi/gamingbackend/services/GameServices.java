@@ -105,6 +105,7 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);
@@ -123,6 +124,7 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);
@@ -141,11 +143,12 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);
                     AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 3);
+                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 4);
                     userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
 
 

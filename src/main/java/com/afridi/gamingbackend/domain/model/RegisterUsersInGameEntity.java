@@ -35,5 +35,6 @@ public class RegisterUsersInGameEntity {
     private String partnerTwoName;
 
     private String partnerThreeName;
+    private String partnerNameFour;
 
 }
