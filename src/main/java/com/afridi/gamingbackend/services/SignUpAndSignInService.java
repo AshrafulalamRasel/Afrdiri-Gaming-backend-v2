@@ -121,7 +121,8 @@ public class SignUpAndSignInService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtProvider.generateJwtToken(authentication);
-        return new JwtResponse(jwt);
+        String id = getLoggedAuthUser();
+        return new JwtResponse(jwt,id);
     }
 
     public String getLoggedAuthUser() {
