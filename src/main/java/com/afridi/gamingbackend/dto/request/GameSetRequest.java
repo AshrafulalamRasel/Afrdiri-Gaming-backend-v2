@@ -38,6 +38,7 @@ public class GameSetRequest {
     private int perKillPrize;
 
     private int entryFee;
-    
+    private String gameplayOption;
+    private String gameplayStartTime;
 
 }

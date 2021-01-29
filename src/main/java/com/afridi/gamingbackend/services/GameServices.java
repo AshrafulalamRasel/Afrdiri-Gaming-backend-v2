@@ -51,6 +51,8 @@ public class GameServices {
         gameEntity.setWinnerPrize(gameSetRequest.getWinnerPrize());
         gameEntity.setSecondPrize(gameSetRequest.getSecondPrize());
         gameEntity.setThirdPrize(gameSetRequest.getThirdPrize());
+        gameEntity.setGameplayOption(gameSetRequest.getGameplayOption());
+        gameEntity.setGameplayStartTime(gameSetRequest.getGameplayStartTime());
         gameRepository.saveAndFlush(gameEntity);
         return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }

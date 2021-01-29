@@ -31,6 +31,9 @@ public class GameEntity extends BaseEntity {
 
     private String gameStatus;
 
+    private String gameplayOption;
+    private String gameplayStartTime;
+
     private String roomId;
 
     private String roomPassword;
