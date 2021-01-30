@@ -63,10 +63,9 @@ public class BalanceController {
         return userGameInfoService.updateBalanceStatus(userId, id, userLoadBalRequest);
     }
 
-    @PutMapping("/admin/update/balance/deny/users/{userId}/requests/{id}")
-    public ResponseEntity<String> updateBanlanceDeny(@PathVariable String id, @PathVariable("userId") String userId,
-                                                          @RequestBody UserLoadBalRequest userLoadBalRequest) {
-        return userGameInfoService.updateBalanceStatusDeny(userId, id, userLoadBalRequest);
+    @PutMapping("/admin/update/balance/deny/requests/{id}")
+    public ResponseEntity<String> updateBalanceDeny(@PathVariable String id) {
+        return userGameInfoService.updateBalanceStatusDeny(id);
     }
 
     @PutMapping("/admin/update/balance/users/{userId}/game/{gameId}")

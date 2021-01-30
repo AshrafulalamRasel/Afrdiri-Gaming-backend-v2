@@ -136,7 +136,7 @@ public class UserGameInfoService {
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateBalanceStatusDeny(String userId, String balanceId, UserLoadBalRequest userLoadBalRequest) {
+    public ResponseEntity<String> updateBalanceStatusDeny(String balanceId) {
 
         Optional<MoneyRequestEntity> optionalMoneyRequestEntity = moneyRequestRepository.findById(balanceId);
         if (!optionalMoneyRequestEntity.isPresent()) {
@@ -145,10 +145,6 @@ public class UserGameInfoService {
         MoneyRequestEntity moneyRequestEntity = optionalMoneyRequestEntity.get();
         moneyRequestEntity.setAuthorityProcessed(true);
         moneyRequestRepository.save(moneyRequestEntity);
-/*
-        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-        addBalanceRequest.setAmount(userLoadBalRequest.getBalance());
-        addBalance(userId, addBalanceRequest);*/
 
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
