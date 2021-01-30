@@ -50,11 +50,11 @@ public class GameController {
         return userGameInfoService.userShowAllGameInActive();
     }
 
-    @PutMapping("/games/{gameId}/players/refund/")
+    @PutMapping("/games/{gameId}/players/refund")
     public String getRefund(@PathVariable String gameId) {
         return userGameInfoService.getRefund(gameId);
     }
-    @PutMapping("/games/{gameId}/players/{id}/refund/")
+    @PutMapping("/games/{gameId}/players/{id}/refund")
     public String getRefund(@PathVariable String gameId,@PathVariable String id) {
         return userGameInfoService.getRefundByUserId(gameId,id);
     }
