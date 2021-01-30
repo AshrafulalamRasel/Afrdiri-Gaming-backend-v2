@@ -136,6 +136,23 @@ public class UserGameInfoService {
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
 
+    public ResponseEntity<String> updateBalanceStatusDeny(String userId, String balanceId, UserLoadBalRequest userLoadBalRequest) {
+
+        Optional<MoneyRequestEntity> optionalMoneyRequestEntity = moneyRequestRepository.findById(balanceId);
+        if (!optionalMoneyRequestEntity.isPresent()) {
+            throw new ResourceNotFoundException("User Not Found By User Id");
+        }
+        MoneyRequestEntity moneyRequestEntity = optionalMoneyRequestEntity.get();
+        moneyRequestEntity.setAuthorityProcessed(true);
+        moneyRequestRepository.save(moneyRequestEntity);
+/*
+        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+        addBalanceRequest.setAmount(userLoadBalRequest.getBalance());
+        addBalance(userId, addBalanceRequest);*/
+
+        return new ResponseEntity("Successfully done", HttpStatus.OK);
+    }
+
 
     public ResponseEntity<String> updateTotalEarnPerKill(String userId, String gameId, PerKillOnGameRequest perKillOnGameRequest) {
 
@@ -318,4 +335,36 @@ public class UserGameInfoService {
         return new ResponseEntity(withdrawRequestRepository.findAllByUserId(loggedUserId), HttpStatus.OK);
     }
 
+    public String getRefund(String gameId) {
+        Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+        if(!gameEntity.isPresent())
+        {
+            throw new ResourceNotFoundException("Game Not Found");
+        }
+
+        int registerAmount = gameEntity.get().getEntryFee();
+
+        for(RegisterUsersInGameEntity registerUsersInGameEntity: gameEntity.get().getRegisterUsersInGameEntities())
+        {
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount));
+            addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+        }
+        return "added";
+    }
+
+    public String getRefundByUserId(String gameId, String id) {
+        Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+        if(!gameEntity.isPresent())
+        {
+            throw new ResourceNotFoundException("Game Not Found");
+        }
+
+        int registerAmount = gameEntity.get().getEntryFee();
+        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+        addBalanceRequest.setAmount(Double.valueOf(registerAmount));
+        addBalance(id,addBalanceRequest);
+
+        return "added";
+    }
 }

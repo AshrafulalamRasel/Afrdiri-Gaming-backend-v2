@@ -50,6 +50,14 @@ public class GameController {
         return userGameInfoService.userShowAllGameInActive();
     }
 
+    @PutMapping("/games/{gameId}/players/refund/")
+    public String getRefund(@PathVariable String gameId) {
+        return userGameInfoService.getRefund(gameId);
+    }
+    @PutMapping("/games/{gameId}/players/{id}/refund/")
+    public String getRefund(@PathVariable String gameId,@PathVariable String id) {
+        return userGameInfoService.getRefundByUserId(gameId,id);
+    }
     @PutMapping("/registration/user/games/{gameId}")
     public ResponseEntity<String> registration(@PathVariable String gameId, @RequestBody RegistrationInGameRequest registrationInGameRequest) {
        return gameServices.registration(gameId, registrationInGameRequest);

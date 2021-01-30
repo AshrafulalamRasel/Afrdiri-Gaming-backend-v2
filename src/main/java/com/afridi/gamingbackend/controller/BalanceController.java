@@ -63,6 +63,12 @@ public class BalanceController {
         return userGameInfoService.updateBalanceStatus(userId, id, userLoadBalRequest);
     }
 
+    @PutMapping("/admin/update/balance/deny/users/{userId}/requests/{id}")
+    public ResponseEntity<String> updateBanlanceDeny(@PathVariable String id, @PathVariable("userId") String userId,
+                                                          @RequestBody UserLoadBalRequest userLoadBalRequest) {
+        return userGameInfoService.updateBalanceStatusDeny(userId, id, userLoadBalRequest);
+    }
+
     @PutMapping("/admin/update/balance/users/{userId}/game/{gameId}")
     public ResponseEntity<String> updateTotalEarnPerKill(@PathVariable("userId") String userId, @PathVariable("gameId") String gameId,
                                                          @RequestBody PerKillOnGameRequest perKillOnGameRequest) {

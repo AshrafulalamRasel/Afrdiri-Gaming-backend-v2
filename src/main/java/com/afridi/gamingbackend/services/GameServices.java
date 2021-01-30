@@ -28,6 +28,7 @@ public class GameServices {
     private final RegistrationUsersInGameRepository registrationUsersInGameRepository;
 
     public ResponseEntity<String> adminCreateGame(GameSetRequest gameSetRequest) {
+
         UUID id = UUID.randomUUID();
         String uuid = id.toString();
         String OwnerId = signUpAndSignInService.getLoggedAuthUser();
