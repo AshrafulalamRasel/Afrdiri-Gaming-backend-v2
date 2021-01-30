@@ -28,6 +28,7 @@ public class MoneyRequestEntity extends BaseEntity {
     private int lastThreeDigitOfPayableMobileNo;
 
     private boolean isAuthorityProcessed;
+    private String balanceStatus;
 
 
 }

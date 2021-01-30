@@ -127,6 +127,7 @@ public class UserGameInfoService {
         }
         MoneyRequestEntity moneyRequestEntity = optionalMoneyRequestEntity.get();
         moneyRequestEntity.setAuthorityProcessed(true);
+        moneyRequestEntity.setBalanceStatus("Success");
         moneyRequestRepository.save(moneyRequestEntity);
 
         AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
@@ -144,6 +145,7 @@ public class UserGameInfoService {
         }
         MoneyRequestEntity moneyRequestEntity = optionalMoneyRequestEntity.get();
         moneyRequestEntity.setAuthorityProcessed(true);
+        moneyRequestEntity.setBalanceStatus("cancel");
         moneyRequestRepository.save(moneyRequestEntity);
 
         return new ResponseEntity("Successfully done", HttpStatus.OK);
