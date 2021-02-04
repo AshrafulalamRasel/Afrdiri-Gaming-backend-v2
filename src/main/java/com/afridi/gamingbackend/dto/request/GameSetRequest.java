@@ -17,6 +17,8 @@ public class GameSetRequest {
 
     private String gameName;
 
+    private String maxPlayers;
+
     private String version;
 
     private String map;

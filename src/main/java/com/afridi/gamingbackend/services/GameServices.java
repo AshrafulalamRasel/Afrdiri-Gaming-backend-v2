@@ -37,6 +37,7 @@ public class GameServices {
         gameEntity.setId(uuid);
         gameEntity.setGameNumber(gameSetRequest.getGameNumber());
         gameEntity.setGameName(gameSetRequest.getGameName());
+        gameEntity.setMaxPlayers(gameSetRequest.getMaxPlayers());
         gameEntity.setGameType(gameSetRequest.getGameType());
         gameEntity.setGameStatus(gameSetRequest.getGameStatus());
         gameEntity.setVersion(gameSetRequest.getVersion());
