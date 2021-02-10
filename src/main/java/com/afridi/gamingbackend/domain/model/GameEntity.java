@@ -24,6 +24,7 @@ public class GameEntity extends BaseEntity {
 
     private String gameName;
 
+    private String maxPlayers;
 
     private String version;
 
@@ -32,6 +33,7 @@ public class GameEntity extends BaseEntity {
     private String gameStatus;
 
     private String gameplayOption;
+
     private String gameplayStartTime;
 
     private String roomId;
