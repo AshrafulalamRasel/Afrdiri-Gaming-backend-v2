@@ -34,7 +34,7 @@ public class CommonUsersAuthLog {
     }
 
 
-    @PutMapping("/common/password/Change/user/admin")
+    @PutMapping("/common/password/reset")
     public String updatePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
 
         return signUpAndSignInService.updatePasswordCommon(changePasswordRequest);

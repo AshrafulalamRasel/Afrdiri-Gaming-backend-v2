@@ -32,6 +32,8 @@ public class AdminAuthLog {
         return signUpAndSignInService.AdminSignUp(signUpRequest);
     }
 
+
+
     @PostMapping("/admin/create/profile")
     public ResponseEntity<String> createAdmin(@RequestBody AdminInfoRequest adminInfoRequest) {
         return adminInfoService.createAdminInformation(adminInfoRequest);

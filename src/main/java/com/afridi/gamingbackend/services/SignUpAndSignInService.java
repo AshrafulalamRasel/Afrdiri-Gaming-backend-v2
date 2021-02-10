@@ -166,9 +166,8 @@ public class SignUpAndSignInService {
 
     public String updatePasswordCommon(ChangePasswordRequest changePasswordRequest) {
 
-        String uuid = getLoggedAuthUser();
+        Optional<PlayersEntity> userClassOptional = userRepository.findAllByEmail(changePasswordRequest.getEmail());
 
-        Optional<PlayersEntity> userClassOptional = userRepository.findAllById(uuid);
         if (!userClassOptional.isPresent()) {
             throw new ResourceNotFoundException("UserName not found.");
         }

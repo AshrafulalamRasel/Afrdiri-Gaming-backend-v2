@@ -14,8 +14,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class ChangePasswordRequest {
 
-    @NotBlank
-    @Size(min = 6, max = 40)
+
+    private String email;
     private String password;
 
 
