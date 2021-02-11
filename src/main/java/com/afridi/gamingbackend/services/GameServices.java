@@ -98,7 +98,7 @@ public class GameServices {
             }
         }
 
-        if (playersProfileEntity.getAcBalance() > gameEntity.getEntryFee()) {
+        if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()) {
             if (!isAlreadyRegistered) {
                 if (registrationInGameRequest.getPartnerType().toLowerCase().equals("solo")) {
 
