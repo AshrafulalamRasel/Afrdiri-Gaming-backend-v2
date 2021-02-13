@@ -186,7 +186,7 @@ public class UserGameInfoService {
                 Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getAcBalance()) + (gameEntity.getSecondPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
                 playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
-                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getSecondPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
@@ -195,7 +195,7 @@ public class UserGameInfoService {
 
                 playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
-                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getThirdPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
