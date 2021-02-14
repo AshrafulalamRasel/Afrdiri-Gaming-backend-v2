@@ -16,6 +16,8 @@ public interface GameRepository extends JpaRepository<GameEntity, String> {
     Optional<GameEntity> findAllById(String id);
 
 
+
+
     //    @Query(
 //            value = "SELECT * FROM GAME_SERVICE u WHERE u.isactive = 1",
 //            nativeQuery = true)
