@@ -6,7 +6,9 @@ import com.afridi.gamingbackend.dto.request.GameActiveAndInActiveRequest;
 import com.afridi.gamingbackend.dto.request.GameProfileUpdateRequest;
 import com.afridi.gamingbackend.dto.request.GameSetRequest;
 import com.afridi.gamingbackend.dto.request.RegistrationInGameRequest;
+import com.afridi.gamingbackend.dto.response.RoomIdAndPasswordResponse;
 import com.afridi.gamingbackend.services.GameServices;
+import com.afridi.gamingbackend.services.RoomIdService;
 import com.afridi.gamingbackend.services.UserGameInfoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class GameController {
 
     private GameServices gameServices;
     private UserGameInfoService userGameInfoService;
+    private RoomIdService roomIdService;
 
     @PostMapping("/admin/create/game")
     public ResponseEntity<String> createGame(@RequestBody GameSetRequest gameSetRequest) {
@@ -71,6 +74,11 @@ public class GameController {
     @GetMapping("/common/show/all/games")
     public List<GameEntity> getAllGames() {
         return userGameInfoService.userShowAllGames();
+    }
+
+    @GetMapping("/user/show/all/games/room/password/{gameId}")
+    public ResponseEntity<RoomIdAndPasswordResponse> getRoomIdAndPassword(@PathVariable String gameId) {
+        return roomIdService.getGameRegisterUserByGameId(gameId);
     }
 
 

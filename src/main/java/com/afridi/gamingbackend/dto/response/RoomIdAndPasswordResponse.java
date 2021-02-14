@@ -9,21 +9,10 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfoResponse {
+public class RoomIdAndPasswordResponse {
 
-
-    private String firstName;
-
-    private String lastName;
-
-    private String username;
-
-    private String email;
-
-    private String mobileNo;
-    private Double acBalance;
-    private int totalKill;
-    private Double totalEarn;
+    private String roomId;
+    private String roomPassword;
 
 
 }
