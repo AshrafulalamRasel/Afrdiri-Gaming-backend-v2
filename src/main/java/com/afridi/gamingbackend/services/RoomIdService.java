@@ -25,30 +25,26 @@ public class RoomIdService {
     public ResponseEntity<RoomIdAndPasswordResponse> getGameRegisterUserByGameId(String gameId){
 
         String loggedUserId = signUpAndSignInService.getLoggedAuthUser();
-        Optional<RegisterUsersInGameEntity> gameIdInformation = registrationUsersInGameRepository.findAllUserBygameId(gameId);
+        Optional<List<RegisterUsersInGameEntity>> gameIdInformationList = registrationUsersInGameRepository.findAllUserBygameId(gameId);
+        RoomIdAndPasswordResponse roomIdAndPasswordResponse = new RoomIdAndPasswordResponse("","");
 
-        List<RoomIdAndPasswordResponse> roomIdAndPasswordResponses= new ArrayList<>();
+        for (RegisterUsersInGameEntity gameIdInformation: gameIdInformationList.get()) {
+            if (gameIdInformation.getUserId().equals(loggedUserId)) {
 
-        if (gameIdInformation.get().getUserId().equals(loggedUserId)){
+                Optional<GameEntity> optionalGameRepository = gameRepository.findAllById(gameId);
 
-            Optional<GameEntity> optionalGameRepository = gameRepository.findAllById(gameId);
+                GameEntity gameEntity = optionalGameRepository.get();
+                roomIdAndPasswordResponse=  new RoomIdAndPasswordResponse(gameEntity.getRoomId(), gameEntity.getRoomPassword());
 
-            GameEntity gameEntity = optionalGameRepository.get();
 
-            roomIdAndPasswordResponses.add(new RoomIdAndPasswordResponse(gameEntity.getRoomId(),gameEntity.getRoomPassword()));
 
-            return new ResponseEntity(roomIdAndPasswordResponses, HttpStatus.OK);
+
+            }
 
         }
 
-        else if (!gameIdInformation.get().getUserId().equals(loggedUserId)){
 
-            return new ResponseEntity("Not Found User In Game Registration ", HttpStatus.OK);
-        }
-
-
-
-        return new ResponseEntity(roomIdAndPasswordResponses, HttpStatus.OK);
+        return new ResponseEntity(roomIdAndPasswordResponse, HttpStatus.OK);
     }
 
 
