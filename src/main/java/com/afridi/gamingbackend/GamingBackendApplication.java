@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @AllArgsConstructor
 public class GamingBackendApplication extends SpringBootServletInitializer {
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(GamingBackendApplication.class, args);
 	}
@@ -20,4 +21,6 @@ public class GamingBackendApplication extends SpringBootServletInitializer {
 		return builder.sources(GamingBackendApplication.class);
 	}
 
+
 }
+
