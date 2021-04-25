@@ -98,10 +98,11 @@ public class GameServices {
             }
         }
 
-        if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()) {
-            if (!isAlreadyRegistered) {
-                if (registrationInGameRequest.getPartnerType().toLowerCase().equals("solo")) {
+        if (!isAlreadyRegistered) {
 
+            if (registrationInGameRequest.getPartnerType().toLowerCase().equals("solo")) {
+
+                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()) {
                     RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
                     registerUsersInGameEntity.setUserId(loggedUserId);
                     registerUsersInGameEntity.setTotalEarn(0.0);
@@ -116,10 +117,15 @@ public class GameServices {
                     AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
                     addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()));
                     userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-
-
                 }
-                if (registrationInGameRequest.getPartnerType().toLowerCase().equals("duo")) {
+                else {
+                    throw new RuntimeException("Insufficient Balance");
+                }
+            }
+
+            else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("duo")){
+
+                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*2){
 
                     RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
                     registerUsersInGameEntity.setUserId(loggedUserId);
@@ -135,11 +141,15 @@ public class GameServices {
                     AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
                     addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 2);
                     userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-
+                }
+                else {
+                    throw new RuntimeException("Insufficient Balance");
                 }
 
-                if (registrationInGameRequest.getPartnerType().toLowerCase().equals("squad")) {
+            }
+            else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("squad")) {
 
+                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*4){
                     RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
                     registerUsersInGameEntity.setUserId(loggedUserId);
                     registerUsersInGameEntity.setTotalEarn(0.0);
@@ -154,15 +164,19 @@ public class GameServices {
                     AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
                     addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 4);
                     userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-
-
                 }
-            } else {
-                throw new ResourceNotFoundException("Already Registration This Game ...");
+                else {
+                    throw new RuntimeException("Insufficient Balance");
+                }
+            }
+            else {
+                throw new RuntimeException("Insufficient Balance");
             }
 
-        } else {
-            throw new RuntimeException("Insufficient Balance");
+        }
+
+        else {
+            throw new RuntimeException("Already Register In Game");
         }
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
