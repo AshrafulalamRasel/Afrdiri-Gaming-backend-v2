@@ -334,34 +334,94 @@ public class UserGameInfoService {
     }
 
     public String getRefund(String gameId) {
+
+
         Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+
         if(!gameEntity.isPresent())
         {
             throw new ResourceNotFoundException("Game Not Found");
         }
-
-        int registerAmount = gameEntity.get().getEntryFee();
+        GameEntity gameEntityManager = gameEntity.get();
 
         for(RegisterUsersInGameEntity registerUsersInGameEntity: gameEntity.get().getRegisterUsersInGameEntities())
         {
-            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-            addBalanceRequest.setAmount(Double.valueOf(registerAmount));
-            addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+            if (gameEntityManager.getGameType().toLowerCase().equals("solo")){
+
+                int registerAmount = gameEntity.get().getEntryFee();
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount));
+                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+            }
+
+           else if (gameEntityManager.getGameType().toLowerCase().equals("duo")){
+
+                int registerAmount = gameEntity.get().getEntryFee();
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount*2));
+                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+            }
+
+           else if (gameEntityManager.getGameType().toLowerCase().equals("squad")){
+                int registerAmount = gameEntity.get().getEntryFee();
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
+                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+            }
+
+           else if (gameEntityManager.getGameType().toLowerCase().equals("squadvssquad")){
+                int registerAmount = gameEntity.get().getEntryFee();
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
+                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+            }
+
         }
         return "added";
     }
 
     public String getRefundByUserId(String gameId, String id) {
         Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+
         if(!gameEntity.isPresent())
         {
             throw new ResourceNotFoundException("Game Not Found");
         }
+        GameEntity gameEntityManager = gameEntity.get();
 
-        int registerAmount = gameEntity.get().getEntryFee();
-        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-        addBalanceRequest.setAmount(Double.valueOf(registerAmount));
-        addBalance(id,addBalanceRequest);
+        if (gameEntityManager.getGameType().toLowerCase().equals("solo")){
+
+            int registerAmount = gameEntity.get().getEntryFee();
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount));
+            addBalance(id,addBalanceRequest);
+        }
+        else if (gameEntityManager.getGameType().toLowerCase().equals("duo")){
+
+            int registerAmount = gameEntity.get().getEntryFee();
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount*2));
+            addBalance(id,addBalanceRequest);
+        }
+        else if (gameEntityManager.getGameType().toLowerCase().equals("squad")){
+
+            int registerAmount = gameEntity.get().getEntryFee();
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
+            addBalance(id,addBalanceRequest);
+        }
+        else if (gameEntityManager.getGameType().toLowerCase().equals("squadvssquad")){
+
+            int registerAmount = gameEntity.get().getEntryFee();
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
+            addBalance(id,addBalanceRequest);
+        }
+
+        else {
+            throw new RuntimeException("Not found");
+        }
+
 
         return "added";
     }
