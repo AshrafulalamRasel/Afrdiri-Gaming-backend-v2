@@ -111,6 +111,7 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
                     registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);
@@ -135,6 +136,7 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
                     registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);
@@ -158,6 +160,31 @@ public class GameServices {
                     registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
                     registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
                     registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
+                    registerUsersInGameEntity.setTotalKill(0);
+                    gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
+                    gameRepository.save(gameEntity);
+                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 4);
+                    userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
+                }
+                else {
+                    throw new RuntimeException("Insufficient Balance");
+                }
+            }
+
+            else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("squad vs squad")) {
+
+                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*4){
+                    RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+                    registerUsersInGameEntity.setUserId(loggedUserId);
+                    registerUsersInGameEntity.setTotalEarn(0.0);
+                    registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
+                    registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
+                    registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
+                    registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
                     registerUsersInGameEntity.setTotalKill(0);
                     gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
                     gameRepository.save(gameEntity);

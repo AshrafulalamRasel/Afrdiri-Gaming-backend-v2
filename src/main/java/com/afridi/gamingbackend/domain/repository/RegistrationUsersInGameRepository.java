@@ -24,4 +24,6 @@ public interface RegistrationUsersInGameRepository extends JpaRepository<Registe
     @Query(value = "SELECT * FROM  register_users_in_game_entity WHERE f_key = ?",nativeQuery = true)
     Optional<List<RegisterUsersInGameEntity>> findAllUserBygameId(@Param("f_key") String f_key);
 
+    @Query(value = "SELECT * FROM  register_users_in_game_entity WHERE user_id = ?",nativeQuery = true)
+    Optional<List<RegisterUsersInGameEntity>> findAllGameByUserId(@Param("user_id") String userId);
 }

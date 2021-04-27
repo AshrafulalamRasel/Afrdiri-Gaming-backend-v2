@@ -179,6 +179,7 @@ public class UserGameInfoService {
 
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setStatusInGame(gameEntity.getWinnerPrize());
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
@@ -187,6 +188,7 @@ public class UserGameInfoService {
                 playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getSecondPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setStatusInGame(gameEntity.getSecondPrize());
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
@@ -196,6 +198,7 @@ public class UserGameInfoService {
                 playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getThirdPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setStatusInGame(gameEntity.getThirdPrize());
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
@@ -410,7 +413,7 @@ public class UserGameInfoService {
             addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
             addBalance(id,addBalanceRequest);
         }
-        else if (gameEntityManager.getGameType().toLowerCase().equals("squadvssquad")){
+        else if (gameEntityManager.getGameType().toLowerCase().equals("squad vs squad")){
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
