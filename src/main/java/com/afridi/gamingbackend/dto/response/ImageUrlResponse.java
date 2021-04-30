@@ -12,8 +12,9 @@ import lombok.Setter;
 public class ImageUrlResponse {
 
     private String fileName;
-
+    private String fileId;
     private String webUrl;
+    private String imageUrl;
     private byte[] imageSize;
 
 
