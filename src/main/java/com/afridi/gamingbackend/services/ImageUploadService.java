@@ -19,6 +19,8 @@ import javax.servlet.ServletContext;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ public class ImageUploadService {
     private final ImageUploadRepository imageUploadRepository;
 
     private  final  ServletContext context;
+    private final String url = "http://localhost:8088/api/" ;
 
 
     public IdentityResponse creatateImage(MultipartFile inputFile, String webUrl) throws IOException {
@@ -57,19 +60,24 @@ public class ImageUploadService {
     }
 
 
-    public ImageUrlResponse getUrlResponse (String id){
+    public List<ImageUrlResponse> getUrlResponse (){
 
-        Optional<ImageUploadHeader> imageUploadHeaderOptional = imageUploadRepository.findAllById(id);
+        List<ImageUploadHeader> imageUploadHeaderList = imageUploadRepository.findAll();
+        List<ImageUrlResponse> imageUrlResponseList = new ArrayList<>();
 
-        ImageUploadHeader imageUploadHeader = imageUploadHeaderOptional.get();
+        for (ImageUploadHeader imageUploadHeader: imageUploadHeaderList){
 
-        ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
+            ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
 
-        imageUrlResponse.setFileName(imageUploadHeader.getName());
-        imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
+            imageUrlResponse.setFileName(imageUploadHeader.getName());
+            imageUrlResponse.setFileId(imageUploadHeader.getId());
+            imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
+            imageUrlResponse.setImageUrl(url+"auth/getFile/"+imageUploadHeader.getId());
+            imageUrlResponseList.add(imageUrlResponse);
+        }
 
 
-        return imageUrlResponse;
+        return imageUrlResponseList;
     }
 
     public ResponseEntity<byte[]> getImageByFileName (String id)     {

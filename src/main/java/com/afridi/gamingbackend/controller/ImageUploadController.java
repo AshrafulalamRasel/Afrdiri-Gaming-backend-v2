@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.*;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,8 +36,8 @@ public class ImageUploadController {
       return imageUploadService.getImageByFileName(id);
     }
 
-    @GetMapping("/getUrl/{id}")
-    public ImageUrlResponse getUrl(@PathVariable String id){
-        return imageUploadService.getUrlResponse(id);
+    @GetMapping("/getUrl")
+    public List<ImageUrlResponse> getUrl(){
+        return imageUploadService.getUrlResponse();
     }
 }
