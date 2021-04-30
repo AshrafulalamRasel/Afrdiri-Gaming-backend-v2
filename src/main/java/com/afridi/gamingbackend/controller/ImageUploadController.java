@@ -10,11 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 @Slf4j
 @RestController
@@ -26,9 +24,9 @@ public class ImageUploadController {
     private ImageUploadService imageUploadService;
 
     @PostMapping("/upload/image")
-    public ResponseEntity<IdentityResponse> insertImage(@RequestParam("file") MultipartFile file,String webUrl) {
+    public ResponseEntity<IdentityResponse> insertImage(@RequestParam("file") MultipartFile file, String webUrl) throws IOException {
 
-        return new ResponseEntity(imageUploadService.createImage(file,webUrl), HttpStatus.OK);
+        return new ResponseEntity(imageUploadService.creatateImage(file,webUrl), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getFile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

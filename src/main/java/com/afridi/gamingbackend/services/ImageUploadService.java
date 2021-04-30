@@ -6,17 +6,19 @@ import com.afridi.gamingbackend.domain.repository.ImageUploadRepository;
 import com.afridi.gamingbackend.dto.request.ImageUploadRequest;
 import com.afridi.gamingbackend.dto.response.ImageUrlResponse;
 import com.afridi.gamingbackend.dto.response.IdentityResponse;
+import com.afridi.gamingbackend.util.FileUploadUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.ServletContext;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,65 +33,27 @@ public class ImageUploadService {
     private  final  ServletContext context;
 
 
-    public IdentityResponse createImage(MultipartFile inputFile,String webUrl) {
+    public IdentityResponse creatateImage(MultipartFile inputFile, String webUrl) throws IOException {
 
         UUID id = UUID.randomUUID();
         String uuid = id.toString();
 
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest();
-        if (!inputFile.isEmpty()) {
+        ImageUploadHeader imageUploadRequest = new ImageUploadHeader();
 
-            try {
+        String fileName = StringUtils.cleanPath(inputFile.getOriginalFilename());
+        imageUploadRequest.setName(fileName);
+        imageUploadRequest.setImageSize(inputFile.getSize());
+        imageUploadRequest.setWebUrl(webUrl);
+        imageUploadRequest.setId(uuid);
 
-                String originalFilename = inputFile.getOriginalFilename();
+        String uploadDir = "userPhoto/" + imageUploadRequest.getId();
 
-                File folder=new File("D:/AfridiGameing/Afrdiri-Gaming-backend-v2/src/main/resources/image-upload");
-
-                if (!folder.exists()) {
-
-                    if (folder.mkdir()) {
-
-                        String destinationUrl = folder+ File.separator + originalFilename;
-                        File destinationFile = new File(destinationUrl);
-                        inputFile.transferTo(destinationFile);
-                        imageUploadRequest.setId(uuid);
-                        imageUploadRequest.setName(originalFilename);
-                        imageUploadRequest.setWebUrl(webUrl);
-                        imageUploadRequest.setImageUrl(destinationUrl);
-                        imageUploadRequest.setImageSize(inputFile.getSize());
-                        System.out.println(destinationFile);
-                    }
-
-                    else {
-
-                        System.out.println("Failed to create directory!");
-                    }
-                }
-
-            }
-
-            catch (Exception e) {
-                System.out.println("---" + e.getMessage());
-            }
-
-        }
-
-        else {
-            System.out.println("URL not found");
-        }
-
-
-        ImageUploadHeader imageUploadHeader = new ImageUploadHeader();
-
-        imageUploadHeader.setId(imageUploadRequest.getId());
-        imageUploadHeader.setName(imageUploadRequest.getName());
-        imageUploadHeader.setWebUrl(imageUploadRequest.getWebUrl());
-        imageUploadHeader.setImageUrl(imageUploadRequest.getImageUrl());
-        imageUploadHeader.setImageSize(imageUploadRequest.getImageSize());
-
-        imageUploadRepository.saveAndFlush(imageUploadHeader);
-
+        FileUploadUtil.saveFile(uploadDir, fileName, inputFile);
+        String destinationUrl = uploadDir+ File.separator + fileName;
+        imageUploadRequest.setImageUrl(destinationUrl);
+        imageUploadRepository.saveAndFlush(imageUploadRequest);
         return new IdentityResponse(uuid);
+
     }
 
 
@@ -117,15 +81,17 @@ public class ImageUploadService {
             Optional<ImageUploadHeader> imageUploadHeaderOptional = imageUploadRepository.findAllById(id);
 
             ImageUploadHeader imageUploadHeader = imageUploadHeaderOptional.get();
+            String dirName = "userPhoto";
 
-
+            Path uploadDir = Paths.get(dirName);
+            String uploadPath = uploadDir.toFile().getAbsolutePath();
 
             imageUrlResponse = new ImageUrlResponse();
 
             int nRead;
             byte[] data = new byte[1024];
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            String destinationUrl = "D:/AfridiGameing/Afrdiri-Gaming-backend-v2/src/main/resources/image-upload";
+            String destinationUrl = uploadPath+"/"+id;
             File destinationFile = new File(destinationUrl+ File.separator + imageUploadHeader.getName());
             InputStream inputStream = new FileInputStream(destinationFile);
             InputStream is = inputStream;
@@ -144,4 +110,6 @@ public class ImageUploadService {
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageUrlResponse.getImageSize());
     }
+
+
 }
