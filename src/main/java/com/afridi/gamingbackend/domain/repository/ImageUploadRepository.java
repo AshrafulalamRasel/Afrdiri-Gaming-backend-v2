@@ -14,4 +14,6 @@ public interface ImageUploadRepository extends JpaRepository<ImageUploadHeader, 
 
     Optional<ImageUploadHeader> findAllById(String id);
 
+    @Override
+    long count();
 }

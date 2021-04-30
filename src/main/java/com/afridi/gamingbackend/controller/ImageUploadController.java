@@ -36,6 +36,12 @@ public class ImageUploadController {
       return imageUploadService.getImageByFileName(id);
     }
 
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void getDeleteFileBy(@PathVariable String id) throws IOException{
+       imageUploadService.deleteImage(id);
+    }
+
     @GetMapping("/getUrl")
     public List<ImageUrlResponse> getUrl(){
         return imageUploadService.getUrlResponse();

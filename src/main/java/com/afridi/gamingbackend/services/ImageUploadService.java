@@ -8,6 +8,7 @@ import com.afridi.gamingbackend.dto.response.ImageUrlResponse;
 import com.afridi.gamingbackend.dto.response.IdentityResponse;
 import com.afridi.gamingbackend.util.FileUploadUtil;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
 
 @AllArgsConstructor
 @Service
@@ -43,6 +46,8 @@ public class ImageUploadService {
 
         ImageUploadHeader imageUploadRequest = new ImageUploadHeader();
 
+        if (imageUploadRepository.count()<5) {
+
         String fileName = StringUtils.cleanPath(inputFile.getOriginalFilename());
         imageUploadRequest.setName(fileName);
         imageUploadRequest.setImageSize(inputFile.getSize());
@@ -54,7 +59,12 @@ public class ImageUploadService {
         FileUploadUtil.saveFile(uploadDir, fileName, inputFile);
         String destinationUrl = uploadDir+ File.separator + fileName;
         imageUploadRequest.setImageUrl(destinationUrl);
-        imageUploadRepository.saveAndFlush(imageUploadRequest);
+
+            imageUploadRepository.saveAndFlush(imageUploadRequest);
+        }
+        else {
+            throw  new  RuntimeException("Please Delete one Image");
+        }
         return new IdentityResponse(uuid);
 
     }
@@ -67,13 +77,18 @@ public class ImageUploadService {
 
         for (ImageUploadHeader imageUploadHeader: imageUploadHeaderList){
 
-            ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
 
-            imageUrlResponse.setFileName(imageUploadHeader.getName());
-            imageUrlResponse.setFileId(imageUploadHeader.getId());
-            imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
-            imageUrlResponse.setImageUrl(url+"auth/getFile/"+imageUploadHeader.getId());
-            imageUrlResponseList.add(imageUrlResponse);
+
+                System.out.println("imageUploadRepository.count()"+imageUploadRepository.count());
+
+                ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
+
+                imageUrlResponse.setFileName(imageUploadHeader.getName());
+                imageUrlResponse.setFileId(imageUploadHeader.getId());
+                imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
+                imageUrlResponse.setImageUrl(url + "auth/getFile/" + imageUploadHeader.getId());
+                imageUrlResponseList.add(imageUrlResponse);
+
         }
 
 
@@ -117,6 +132,24 @@ public class ImageUploadService {
 
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageUrlResponse.getImageSize());
+    }
+
+
+    public void deleteImage(String id) throws IOException {
+
+        String dirName = "userPhoto";
+        Path uploadDir = Paths.get(dirName);
+        String uploadPath = uploadDir.toFile().getAbsolutePath();
+        String destinationUrl = uploadPath+"/"+id;
+
+        Optional<ImageUploadHeader> imageUploadHeaderOptional = imageUploadRepository.findAllById(id);
+        ImageUploadHeader imageUploadHeader = imageUploadHeaderOptional.get();
+        File folder = new File(destinationUrl);
+
+            FileUtils.forceDelete(folder);
+            imageUploadRepository.delete(imageUploadHeader);
+
+
     }
 
 
