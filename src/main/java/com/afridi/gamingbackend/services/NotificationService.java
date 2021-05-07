@@ -68,7 +68,7 @@ public class NotificationService {
             notificationRequest.setNotificationSubject(notificationSend.getNotificationSubject());
             notificationRequest.setNotificationBody(notificationSend.getNotificationBody());
             notificationRequestList.add(notificationRequest);
-            notificationSendRepository.delete(notificationSend);
+           /* notificationSendRepository.delete(notificationSend);*/
 
         }
         return notificationRequestList;
