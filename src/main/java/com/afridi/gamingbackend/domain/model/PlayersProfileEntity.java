@@ -27,6 +27,7 @@ public class PlayersProfileEntity extends BaseEntity {
     private String mobileNo;
 
     private Double acBalance;
+    private Double reFound;
 
     @Column(name = "ISACTIVE", nullable = false)
     private Boolean isActive;

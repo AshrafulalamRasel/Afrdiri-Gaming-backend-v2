@@ -58,6 +58,7 @@ public class HistroryServices {
 
 
         userHistoryResponse.setCurrentAccount(profileEntity.getAcBalance());
+        userHistoryResponse.setReFound(profileEntity.getReFound());
 
         Optional<List<RegisterUsersInGameEntity>> registerUsersInGameEntityList = registrationUsersInGameRepository.findAllGameByUserId(ownerId);
 

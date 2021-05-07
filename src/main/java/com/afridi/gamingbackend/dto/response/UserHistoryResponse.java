@@ -24,5 +24,6 @@ public class UserHistoryResponse {
     private int gamePerInvest;
     private Double incomeInPerGame;
     private Double currentAccount;
+    private Double reFound;
 
 }

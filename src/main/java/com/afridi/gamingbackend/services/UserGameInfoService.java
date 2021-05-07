@@ -58,6 +58,7 @@ public class UserGameInfoService {
         }
         PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
         playersProfileEntity.setAcBalance(playersProfileEntity.getAcBalance() + addBalanceRequest.getAmount());
+        playersProfileEntity.setReFound(addBalanceRequest.getAmount());
         userProfileRepository.save(playersProfileEntity);
 
         return new ResponseEntity("Successfully done", HttpStatus.OK);
@@ -91,9 +92,6 @@ public class UserGameInfoService {
 
         MoneyRequestEntity moneyRequestEntity = new MoneyRequestEntity();
 
-        double remainBalance = userProfileClassOptional.get().getAcBalance() - addBalanceRequest.getAmount();
-
-        if(remainBalance >=100){
 
             moneyRequestEntity.setId(uuid);
             moneyRequestEntity.setUserId(loggedUserId);
@@ -104,12 +102,6 @@ public class UserGameInfoService {
             moneyRequestEntity.setLastThreeDigitOfPayableMobileNo(addBalanceRequest.getLastThreeDigitOfPayableMobileNo());
 
             moneyRequestRepository.save(moneyRequestEntity);
-        }
-        else {
-            throw new RuntimeException("Withdraw Request Less than 100.");
-        }
-
-
 
         return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }
@@ -259,7 +251,12 @@ public class UserGameInfoService {
 
         MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
 
-        if (userProfileClassOptional.get().getAcBalance() > withDrawMoneyRequest.getAmount()) {
+        double remainBalance = userProfileClassOptional.get().getAcBalance() - withDrawMoneyRequest.getAmount();
+
+
+
+
+        if (remainBalance>=100) {
 
             moneyWithdrawRequestEntity.setId(uuid);
             moneyWithdrawRequestEntity.setUserId(loggedUserId);
@@ -272,11 +269,15 @@ public class UserGameInfoService {
 
             withdrawRequestRepository.save(moneyWithdrawRequestEntity);
             return new ResponseEntity<>(uuid, HttpStatus.CREATED);
-        } else {
-            throw new RuntimeException("Money ");
         }
-
+        else {
+        throw new RuntimeException("Withdraw Request Less than 100.");
     }
+
+
+
+
+}
 
     public ResponseEntity<String> updateWithDrawResponse(String id) {
 
