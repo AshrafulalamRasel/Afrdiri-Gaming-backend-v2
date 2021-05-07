@@ -36,7 +36,7 @@ public class ImageUploadService {
     private final ImageUploadRepository imageUploadRepository;
 
     private  final  ServletContext context;
-    private final String url = "http://10.0.2.2:8088/api/" ;
+    private final String url = "http://143.198.196.23:8088/api/" ;
 
 
     public IdentityResponse creatateImage(MultipartFile inputFile, String webUrl) throws IOException {
