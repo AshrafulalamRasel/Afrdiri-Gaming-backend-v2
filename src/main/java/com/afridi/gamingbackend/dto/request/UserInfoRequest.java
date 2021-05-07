@@ -14,17 +14,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserInfoRequest {
 
-    @NotBlank
-    @Size(min = 3, max = 50)
+
     private String firstName;
 
-    @NotBlank
-    @Size(min = 3, max = 50)
+
     private String lastName;
 
-
-    @NotBlank
-    @Size(min = 3, max = 50)
     private String mobileNo;
 
     private Boolean isActive;

@@ -19,14 +19,12 @@ import java.util.Set;
 @Table(name = "PlayersEntity")
 public class PlayersEntity extends BaseEntity {
 
-    @Size(min = 3, max = 50)
+
     private String username;
 
-    @Size(max = 50)
-    @Email
-    private String email;
 
-    @Size(min = 6, max = 100)
+    private String email;
+    
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)

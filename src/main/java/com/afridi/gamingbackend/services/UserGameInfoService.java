@@ -91,15 +91,25 @@ public class UserGameInfoService {
 
         MoneyRequestEntity moneyRequestEntity = new MoneyRequestEntity();
 
-        moneyRequestEntity.setId(uuid);
-        moneyRequestEntity.setUserId(loggedUserId);
-        moneyRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
-        moneyRequestEntity.setAmount(addBalanceRequest.getAmount());
-        moneyRequestEntity.setAuthorityProcessed(false);
-        moneyRequestEntity.setPaymentGetawayName(addBalanceRequest.getPaymentGetawayName());
-        moneyRequestEntity.setLastThreeDigitOfPayableMobileNo(addBalanceRequest.getLastThreeDigitOfPayableMobileNo());
+        double remainBalance = userProfileClassOptional.get().getAcBalance() - addBalanceRequest.getAmount();
 
-        moneyRequestRepository.save(moneyRequestEntity);
+        if(remainBalance >=100){
+
+            moneyRequestEntity.setId(uuid);
+            moneyRequestEntity.setUserId(loggedUserId);
+            moneyRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+            moneyRequestEntity.setAmount(addBalanceRequest.getAmount());
+            moneyRequestEntity.setAuthorityProcessed(false);
+            moneyRequestEntity.setPaymentGetawayName(addBalanceRequest.getPaymentGetawayName());
+            moneyRequestEntity.setLastThreeDigitOfPayableMobileNo(addBalanceRequest.getLastThreeDigitOfPayableMobileNo());
+
+            moneyRequestRepository.save(moneyRequestEntity);
+        }
+        else {
+            throw new RuntimeException("Withdraw Request Less than 100.");
+        }
+
+
 
         return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }
