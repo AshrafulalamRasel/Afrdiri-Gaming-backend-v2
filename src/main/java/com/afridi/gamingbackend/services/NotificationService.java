@@ -65,6 +65,7 @@ public class NotificationService {
 
             NotificationRequest notificationRequest = new NotificationRequest();
 
+            notificationRequest.setId(notificationSend.getId());
             notificationRequest.setNotificationSubject(notificationSend.getNotificationSubject());
             notificationRequest.setNotificationBody(notificationSend.getNotificationBody());
             notificationRequestList.add(notificationRequest);
