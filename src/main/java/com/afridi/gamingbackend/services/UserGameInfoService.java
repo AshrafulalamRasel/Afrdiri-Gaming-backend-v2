@@ -181,6 +181,7 @@ public class UserGameInfoService {
 
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setGameWinningStatus("winner");
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getWinnerPrize());
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
@@ -191,6 +192,7 @@ public class UserGameInfoService {
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getSecondPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getSecondPrize());
+                registerUsersInGameEntityList.setGameWinningStatus("runnerup");
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
@@ -201,6 +203,7 @@ public class UserGameInfoService {
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getThirdPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getThirdPrize());
+                registerUsersInGameEntityList.setGameWinningStatus("third");
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 

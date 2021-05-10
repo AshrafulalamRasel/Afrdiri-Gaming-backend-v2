@@ -38,5 +38,6 @@ public class RegisterUsersInGameEntity {
     private String partnerNameFour;
     private String gameIdStatus;
     private int statusInGame;
+    private String gameWinningStatus;
 
 }
