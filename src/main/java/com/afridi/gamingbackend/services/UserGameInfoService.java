@@ -58,6 +58,18 @@ public class UserGameInfoService {
         }
         PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
         playersProfileEntity.setAcBalance(playersProfileEntity.getAcBalance() + addBalanceRequest.getAmount());
+        userProfileRepository.save(playersProfileEntity);
+
+        return new ResponseEntity("Successfully done", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> addBalanceRefund(String userId, AddBalanceRequest addBalanceRequest) {
+        Optional<PlayersProfileEntity> optionalUserProfileClass = userProfileRepository.findById(userId);
+        if (!optionalUserProfileClass.isPresent()) {
+            throw new ResourceNotFoundException("User Not Found By User Id");
+        }
+        PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
+        playersProfileEntity.setAcBalance(playersProfileEntity.getAcBalance() + addBalanceRequest.getAmount());
         playersProfileEntity.setReFound(addBalanceRequest.getAmount());
         userProfileRepository.save(playersProfileEntity);
 
@@ -411,28 +423,28 @@ public class UserGameInfoService {
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
             addBalanceRequest.setAmount(Double.valueOf(registerAmount));
-            addBalance(id,addBalanceRequest);
+            addBalanceRefund(id,addBalanceRequest);
         }
         else if (gameEntityManager.getGameType().toLowerCase().equals("duo")){
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
             addBalanceRequest.setAmount(Double.valueOf(registerAmount*2));
-            addBalance(id,addBalanceRequest);
+            addBalanceRefund(id,addBalanceRequest);
         }
         else if (gameEntityManager.getGameType().toLowerCase().equals("squad")){
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
             addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-            addBalance(id,addBalanceRequest);
+            addBalanceRefund(id,addBalanceRequest);
         }
         else if (gameEntityManager.getGameType().toLowerCase().equals("squad vs squad")){
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
             addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-            addBalance(id,addBalanceRequest);
+            addBalanceRefund(id,addBalanceRequest);
         }
 
         else {
