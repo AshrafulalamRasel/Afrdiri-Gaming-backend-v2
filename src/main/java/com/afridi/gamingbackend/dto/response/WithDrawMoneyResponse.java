@@ -19,7 +19,7 @@ public class WithDrawMoneyResponse {
     private String lastThreeDigitOfPayableMobileNo;
     private String userName;
     private Double currentBalance;
-    private LocalDateTime updatedAt;
+    private String updatedAt;
 
 
 }

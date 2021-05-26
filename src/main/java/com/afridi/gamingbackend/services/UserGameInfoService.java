@@ -12,10 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -325,8 +324,11 @@ public class UserGameInfoService {
 
             if (mmm.isAuthorityProcessed() == false) {
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime localDateTime = mmm.getUpdatedAt();
+                String formatDateTime = localDateTime.format(formatter);
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), mmm.getUpdatedAt()));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime));
             }
 
         }
@@ -343,10 +345,16 @@ public class UserGameInfoService {
 
         for (MoneyWithdrawRequestEntity mmm : moneyWithdrawRequestEntityList) {
 
+
+
             if (mmm.isAuthorityProcessed() == true) {
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime localDateTime = mmm.getUpdatedAt();
+                String formatDateTime = localDateTime.format(formatter);
+
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), mmm.getUpdatedAt()));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime));
             }
 
         }
