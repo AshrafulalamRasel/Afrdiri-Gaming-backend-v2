@@ -20,6 +20,9 @@ public class WithDrawMoneyResponse {
     private String userName;
     private Double currentBalance;
     private String updatedAt;
+    private boolean isAuthorityProcessed;
+
+
 
 
 }

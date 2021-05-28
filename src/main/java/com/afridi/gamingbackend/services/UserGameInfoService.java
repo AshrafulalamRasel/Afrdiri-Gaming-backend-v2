@@ -328,7 +328,7 @@ public class UserGameInfoService {
                 LocalDateTime localDateTime = mmm.getUpdatedAt();
                 String formatDateTime = localDateTime.format(formatter);
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime,mmm.isAuthorityProcessed()));
             }
 
         }
@@ -354,7 +354,7 @@ public class UserGameInfoService {
                 String formatDateTime = localDateTime.format(formatter);
 
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime,mmm.isAuthorityProcessed()));
             }
 
         }
@@ -367,7 +367,28 @@ public class UserGameInfoService {
 
         String loggedUserId = signUpAndSignInService.getLoggedAuthUser();
 
-        return new ResponseEntity(withdrawRequestRepository.findAllByUserId(loggedUserId), HttpStatus.OK);
+        List<MoneyWithdrawRequestEntity> moneyWithdrawRequestEntityList = withdrawRequestRepository.findAllByUserId(loggedUserId);
+
+        List<WithDrawMoneyResponse> withDrawMoneyRequestList = new ArrayList<>();
+
+        for (MoneyWithdrawRequestEntity mmm : moneyWithdrawRequestEntityList) {
+
+
+
+            if (mmm.isAuthorityProcessed() == true) {
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
+                LocalDateTime localDateTime = mmm.getUpdatedAt();
+                String formatDateTime = localDateTime.format(formatter);
+
+                withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime,mmm.isAuthorityProcessed()));
+            }
+
+        }
+
+
+        return new ResponseEntity(withDrawMoneyRequestList, HttpStatus.OK);
     }
 
     public String getRefund(String gameId) {
