@@ -324,7 +324,7 @@ public class UserGameInfoService {
 
             if (mmm.isAuthorityProcessed() == false) {
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
                 LocalDateTime localDateTime = mmm.getUpdatedAt();
                 String formatDateTime = localDateTime.format(formatter);
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
@@ -349,7 +349,7 @@ public class UserGameInfoService {
 
             if (mmm.isAuthorityProcessed() == true) {
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
                 LocalDateTime localDateTime = mmm.getUpdatedAt();
                 String formatDateTime = localDateTime.format(formatter);
 
