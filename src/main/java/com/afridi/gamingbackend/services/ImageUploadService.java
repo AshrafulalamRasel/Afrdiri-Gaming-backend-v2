@@ -32,11 +32,10 @@ import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
 public class ImageUploadService {
 
 
-
     private final ImageUploadRepository imageUploadRepository;
 
-    private  final  ServletContext context;
-    private final String url = "http://143.198.196.23:8088/api/" ;
+    private final ServletContext context;
+    private final String url = "http://143.198.196.23:8088/api/";
 
 
     public IdentityResponse creatateImage(MultipartFile inputFile, String webUrl) throws IOException {
@@ -46,48 +45,46 @@ public class ImageUploadService {
 
         ImageUploadHeader imageUploadRequest = new ImageUploadHeader();
 
-        if (imageUploadRepository.count()<5) {
+        if (imageUploadRepository.count() < 5) {
 
-        String fileName = StringUtils.cleanPath(inputFile.getOriginalFilename());
-        imageUploadRequest.setName(fileName);
-        imageUploadRequest.setImageSize(inputFile.getSize());
-        imageUploadRequest.setWebUrl(webUrl);
-        imageUploadRequest.setId(uuid);
+            String fileName = StringUtils.cleanPath(inputFile.getOriginalFilename());
+            imageUploadRequest.setName(fileName);
+            imageUploadRequest.setImageSize(inputFile.getSize());
+            imageUploadRequest.setWebUrl(webUrl);
+            imageUploadRequest.setId(uuid);
 
-        String uploadDir = "userPhoto/" + imageUploadRequest.getId();
+            String uploadDir = "userPhoto/" + imageUploadRequest.getId();
 
-        FileUploadUtil.saveFile(uploadDir, fileName, inputFile);
-        String destinationUrl = uploadDir+ File.separator + fileName;
-        imageUploadRequest.setImageUrl(destinationUrl);
+            FileUploadUtil.saveFile(uploadDir, fileName, inputFile);
+            String destinationUrl = uploadDir + File.separator + fileName;
+            imageUploadRequest.setImageUrl(destinationUrl);
 
             imageUploadRepository.saveAndFlush(imageUploadRequest);
-        }
-        else {
-            throw  new  RuntimeException("Please Delete one Image");
+        } else {
+            throw new RuntimeException("Please Delete one Image");
         }
         return new IdentityResponse(uuid);
 
     }
 
 
-    public List<ImageUrlResponse> getUrlResponse (){
+    public List<ImageUrlResponse> getUrlResponse() {
 
         List<ImageUploadHeader> imageUploadHeaderList = imageUploadRepository.findAll();
         List<ImageUrlResponse> imageUrlResponseList = new ArrayList<>();
 
-        for (ImageUploadHeader imageUploadHeader: imageUploadHeaderList){
+        for (ImageUploadHeader imageUploadHeader : imageUploadHeaderList) {
 
 
+            System.out.println("imageUploadRepository.count()" + imageUploadRepository.count());
 
-                System.out.println("imageUploadRepository.count()"+imageUploadRepository.count());
+            ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
 
-                ImageUrlResponse imageUrlResponse = new ImageUrlResponse();
-
-                imageUrlResponse.setFileName(imageUploadHeader.getName());
-                imageUrlResponse.setFileId(imageUploadHeader.getId());
-                imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
-                imageUrlResponse.setImageUrl(url + "auth/getFile/" + imageUploadHeader.getId());
-                imageUrlResponseList.add(imageUrlResponse);
+            imageUrlResponse.setFileName(imageUploadHeader.getName());
+            imageUrlResponse.setFileId(imageUploadHeader.getId());
+            imageUrlResponse.setWebUrl(imageUploadHeader.getWebUrl());
+            imageUrlResponse.setImageUrl(url + "auth/getFile/" + imageUploadHeader.getId());
+            imageUrlResponseList.add(imageUrlResponse);
 
         }
 
@@ -95,7 +92,7 @@ public class ImageUploadService {
         return imageUrlResponseList;
     }
 
-    public ResponseEntity<byte[]> getImageByFileName (String id)     {
+    public ResponseEntity<byte[]> getImageByFileName(String id) {
 
         ImageUrlResponse imageUrlResponse = null;
 
@@ -114,8 +111,8 @@ public class ImageUploadService {
             int nRead;
             byte[] data = new byte[1024];
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            String destinationUrl = uploadPath+"/"+id;
-            File destinationFile = new File(destinationUrl+ File.separator + imageUploadHeader.getName());
+            String destinationUrl = uploadPath + "/" + id;
+            File destinationFile = new File(destinationUrl + File.separator + imageUploadHeader.getName());
             InputStream inputStream = new FileInputStream(destinationFile);
             InputStream is = inputStream;
 
@@ -140,14 +137,14 @@ public class ImageUploadService {
         String dirName = "userPhoto";
         Path uploadDir = Paths.get(dirName);
         String uploadPath = uploadDir.toFile().getAbsolutePath();
-        String destinationUrl = uploadPath+"/"+id;
+        String destinationUrl = uploadPath + "/" + id;
 
         Optional<ImageUploadHeader> imageUploadHeaderOptional = imageUploadRepository.findAllById(id);
         ImageUploadHeader imageUploadHeader = imageUploadHeaderOptional.get();
         File folder = new File(destinationUrl);
 
-            FileUtils.forceDelete(folder);
-            imageUploadRepository.delete(imageUploadHeader);
+        FileUtils.forceDelete(folder);
+        imageUploadRepository.delete(imageUploadHeader);
 
 
     }

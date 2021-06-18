@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PlaystoreLinkRepository extends JpaRepository<PlayStoreLink, String> {
 
+    Optional<PlayStoreLink> findAllById(String id);
 
 }

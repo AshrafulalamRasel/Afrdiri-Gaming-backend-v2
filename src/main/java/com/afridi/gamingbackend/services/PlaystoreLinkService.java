@@ -37,15 +37,25 @@ public class PlaystoreLinkService {
 
     public IdentityResponse createPlayStoreLink(PlayStoreLInkRequest playStoreLInkRequest) {
 
-        String uuid = uuidUtil.getUuid();
 
-        PlayStoreLink playStoreLink = new PlayStoreLink();
+        String uuid = null;
+        List<PlayStoreLink> playStoreLinkOptional = playstoreLinkRepository.findAll();
 
-        playStoreLink.setId(uuid);
-        playStoreLink.setVersionNo(playStoreLInkRequest.getVersionNo());
-        playStoreLink.setPlayStoreLink(playStoreLInkRequest.getPlayStoreLink());
+        for (PlayStoreLink playStoreLink : playStoreLinkOptional){
 
-        playstoreLinkRepository.saveAndFlush(playStoreLink);
+            Optional<PlayStoreLink> optionalPlayStoreLink = playstoreLinkRepository.findAllById(playStoreLink.getId());
+
+            PlayStoreLink playStoreLink1 = optionalPlayStoreLink.get();
+
+             uuid = playStoreLink.getId();
+
+            playStoreLink1.setVersionNo(playStoreLInkRequest.getVersionNo());
+            playStoreLink1.setPlayStoreLink(playStoreLInkRequest.getPlayStoreLink());
+
+            playstoreLinkRepository.saveAndFlush(playStoreLink1);
+
+        }
+
 
         return new IdentityResponse(uuid);
 
