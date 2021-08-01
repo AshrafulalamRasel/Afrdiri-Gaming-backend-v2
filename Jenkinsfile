@@ -1,23 +1,18 @@
 pipeline {
     agent any
 
-
-      triggers {
-             // Every 10 min
-             pollSCM 'H/10 * * * *'
-        }
-
+     tools {
+        maven 'Maven_3.5.2'
+     }
 
     stages {
 
-      stage ('Testing Stage') {
+      stage('Compile stage') {
+                 steps {
+                     bat "mvn clean compile"
+                 }
+       }
 
-               steps {
-                      withMaven(maven : 'maven_3_5_0') {
-                          sh 'mvn test'
-                        }
-                }
-        }
       stage('Build info') {
 
                 steps {
