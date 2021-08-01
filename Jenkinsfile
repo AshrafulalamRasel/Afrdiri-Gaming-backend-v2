@@ -13,7 +13,7 @@ pipeline {
                     slackSend channel: 'jenkinsbuild', message: "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
                 }
 
-        }
+       }
 
       stage('Code Checkout') {
                             steps {
@@ -26,6 +26,15 @@ pipeline {
                                                                url: 'https://github.com/AshrafulalamRasel/Afrdiri-Gaming-backend-v2.git']]])
                             }
 
-        }
+       }
+
+      stage('Build') {
+     	                  steps {
+     	                      echo 'Building..'
+     	                      sh "mvn package"
+     	                  }
+       }
+
     }
+
 }
