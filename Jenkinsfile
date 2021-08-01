@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-         maven 'Maven_3.5.2'
+         maven 'Maven 3.5.2'
      }
       triggers {
              // Every 10 min
