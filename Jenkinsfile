@@ -10,7 +10,14 @@ pipeline {
 
     stages {
 
+      stage ('Testing Stage') {
 
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn test'
+                }
+            }
+        }
       stage('Build info') {
 
                 steps {
@@ -37,7 +44,6 @@ pipeline {
                    steps {
                      echo "Building.."
                       bat "mvn package"
-
 
                    }
        }
