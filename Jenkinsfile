@@ -12,9 +12,9 @@ pipeline {
 
       stage ('Testing Stage') {
 
-            steps {
+            too {
                 withMaven(maven : 'maven_3_5_0') {
-                    bat 'mvn test'
+
                 }
             }
         }
