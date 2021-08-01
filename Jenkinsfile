@@ -45,4 +45,16 @@ pipeline {
 
     }
 
+    post {
+                success {
+                    slackSend channel: 'jenkinsbuild', message: "Build SUCCESSFUL - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                }
+                failure {
+                    slackSend channel: 'jenkinsbuild', message: "Build FAILED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                }
+                aborted {
+                    slackSend channel: 'jenkinsbuild', message: "Build ABORTED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                }
+         }
+
 }
