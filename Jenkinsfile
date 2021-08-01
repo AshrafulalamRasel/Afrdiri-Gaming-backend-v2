@@ -12,7 +12,7 @@ pipeline {
 
       stage ('Testing Stage') {
 
-            too {
+            tools  {
                 withMaven(maven : 'maven_3_5_0') {
 
                 }
