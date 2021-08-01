@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-         maven 'Maven 3.5.2'
-     }
+
       triggers {
              // Every 10 min
              pollSCM 'H/10 * * * *'
@@ -11,6 +9,14 @@ pipeline {
 
 
     stages {
+      stage ('Testing Stage') {
+
+            steps {
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn test'
+                }
+            }
+        }
 
 
       stage('Build info') {
