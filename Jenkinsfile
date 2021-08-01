@@ -16,11 +16,11 @@ pipeline {
 
       stage ('Testing Stage') {
 
-            tool {
-                withMaven(maven : 'maven_3_5_0') {
-
+               steps {
+                      withMaven(maven : 'maven_3_5_0') {
+                          sh 'mvn test'
+                        }
                 }
-            }
         }
       stage('Build info') {
 
