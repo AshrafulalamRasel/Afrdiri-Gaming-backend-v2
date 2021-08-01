@@ -7,10 +7,6 @@ pipeline {
              pollSCM 'H/10 * * * *'
         }
 
-        tool {
-               withMaven(maven : 'maven_3_5_0')
-            }
-
 
     stages {
 
