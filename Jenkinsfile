@@ -22,17 +22,19 @@ pipeline {
                                           doGenerateSubmoduleConfigurations: false,
                                           extensions: [],
                                           submoduleCfg: [],
-                                          userRemoteConfigs: [[credentialsId: 'jenkins-user-github',
+                                          userRemoteConfigs: [[credentialsId: 'Git',
                                                                url: 'https://github.com/AshrafulalamRasel/Afrdiri-Gaming-backend-v2.git']]])
                             }
 
        }
 
       stage('Build') {
-     	                  steps {
-     	                      echo 'Building..'
-     	                      sh "mvn package"
-     	                  }
+                   steps {
+                     echo "Building.."
+                      bat "mvn package"
+
+
+                   }
        }
 
     }
