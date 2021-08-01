@@ -22,7 +22,7 @@ pipeline {
                                           doGenerateSubmoduleConfigurations: false,
                                           extensions: [],
                                           submoduleCfg: [],
-                                          userRemoteConfigs: [[credentialsId: 'Github',
+                                          userRemoteConfigs: [[credentialsId: 'jenkins-user-github',
                                                                url: 'https://github.com/AshrafulalamRasel/Afrdiri-Gaming-backend-v2.git']]])
                             }
 
