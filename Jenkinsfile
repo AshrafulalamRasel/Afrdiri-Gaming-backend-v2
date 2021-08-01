@@ -14,5 +14,18 @@ pipeline {
                 }
 
         }
+
+      stage('Code Checkout') {
+                            steps {
+                                checkout([$class: 'GitSCM',
+                                          branches: [[name: '*/master']],
+                                          doGenerateSubmoduleConfigurations: false,
+                                          extensions: [],
+                                          submoduleCfg: [],
+                                          userRemoteConfigs: [[credentialsId: 'Github',
+                                                               url: 'https://github.com/AshrafulalamRasel/Afrdiri-Gaming-backend-v2.git']]])
+                            }
+
+        }
     }
 }
