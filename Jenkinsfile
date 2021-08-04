@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+//small changes
      triggers {
              // Every 10 min
              pollSCM 'H/5 * * * *'
