@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<PlayersEntity, String> {
 
     Boolean existsByEmail(String email);
 
-    @Query(value = "SELECT id FROM PLAYER_ADMIN_SIGNUP WHERE username = ?1", nativeQuery = true)
+    @Query(value = "SELECT id FROM player_admin_signup WHERE username = ?1", nativeQuery = true)
     Optional<String> findAuthIdByUserName(String username);
 
     Optional<PlayersEntity> findAllById(String id);
