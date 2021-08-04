@@ -87,6 +87,18 @@ public class UserGameInfoService {
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
 
+    public ResponseEntity<String> resumeWiningBalance(String userId, AddBalanceRequest addBalanceRequest) {
+        Optional<PlayersProfileEntity> optionalUserProfileClass = userProfileRepository.findById(userId);
+        if (!optionalUserProfileClass.isPresent()) {
+            throw new ResourceNotFoundException("User Not Found By User Id");
+        }
+        PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
+        playersProfileEntity.setWinningBalance(playersProfileEntity.getWinningBalance() - addBalanceRequest.getAmount());
+        userProfileRepository.save(playersProfileEntity);
+
+        return new ResponseEntity("Successfully done", HttpStatus.OK);
+    }
+
     public ResponseEntity<String> addMoneyRequest(AddMoneyRequest addBalanceRequest) {
 
         UUID id = UUID.randomUUID();
@@ -104,15 +116,15 @@ public class UserGameInfoService {
         MoneyRequestEntity moneyRequestEntity = new MoneyRequestEntity();
 
 
-            moneyRequestEntity.setId(uuid);
-            moneyRequestEntity.setUserId(loggedUserId);
-            moneyRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
-            moneyRequestEntity.setAmount(addBalanceRequest.getAmount());
-            moneyRequestEntity.setAuthorityProcessed(false);
-            moneyRequestEntity.setPaymentGetawayName(addBalanceRequest.getPaymentGetawayName());
-            moneyRequestEntity.setLastThreeDigitOfPayableMobileNo(addBalanceRequest.getLastThreeDigitOfPayableMobileNo());
+        moneyRequestEntity.setId(uuid);
+        moneyRequestEntity.setUserId(loggedUserId);
+        moneyRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+        moneyRequestEntity.setAmount(addBalanceRequest.getAmount());
+        moneyRequestEntity.setAuthorityProcessed(false);
+        moneyRequestEntity.setPaymentGetawayName(addBalanceRequest.getPaymentGetawayName());
+        moneyRequestEntity.setLastThreeDigitOfPayableMobileNo(addBalanceRequest.getLastThreeDigitOfPayableMobileNo());
 
-            moneyRequestRepository.save(moneyRequestEntity);
+        moneyRequestRepository.save(moneyRequestEntity);
 
         return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }
@@ -157,7 +169,7 @@ public class UserGameInfoService {
             throw new ResourceNotFoundException("User Not Found By User Id");
         }
         MoneyRequestEntity moneyRequestEntity = optionalMoneyRequestEntity.get();
-        moneyRequestEntity.setAuthorityProcessed(true);
+        moneyRequestEntity.setAuthorityProcessed(false);
         moneyRequestEntity.setBalanceStatus("cancel");
         moneyRequestRepository.save(moneyRequestEntity);
 
@@ -170,7 +182,7 @@ public class UserGameInfoService {
         Optional<PlayersProfileEntity> optionalUserProfileClass = userProfileRepository.findById(userId);
 
         Optional<GameEntity> gameEntityOptionalList = gameRepository.findById(gameId);
-        Optional<RegisterUsersInGameEntity> registerUsersInGameEntity = registrationUsersInGameRepository.findAllByUserIdAndPlayerId(gameId,userId);
+        Optional<RegisterUsersInGameEntity> registerUsersInGameEntity = registrationUsersInGameRepository.findAllByUserIdAndPlayerId(gameId, userId);
 
         if (!optionalUserProfileClass.isPresent()) {
             throw new ResourceNotFoundException("User Not Found By User Id");
@@ -187,32 +199,34 @@ public class UserGameInfoService {
         if (gameEntity.getId().equals(gameId)) {
 
             if (perKillOnGameRequest.getPrize().toLowerCase().equals("winner")) {
-                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getAcBalance()) + (gameEntity.getWinnerPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
-                playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
+                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getWinningBalance()) + (gameEntity.getWinnerPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
+                playersProfileEntity.setWinningBalance(Double.valueOf(calculatePerKillAmount));
 
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
-                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getWinnerPrize() + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registerUsersInGameEntityList.setGameWinningStatus("winner");
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getWinnerPrize());
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
             } else if (perKillOnGameRequest.getPrize().toLowerCase().replaceAll(" ", "").equals("runnerup")) {
-                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getAcBalance()) + (gameEntity.getSecondPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
-                playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
+                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getWinningBalance()) + (gameEntity.getSecondPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
+                playersProfileEntity.setWinningBalance(Double.valueOf(calculatePerKillAmount));
+
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
-                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getSecondPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getSecondPrize() + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getSecondPrize());
                 registerUsersInGameEntityList.setGameWinningStatus("runnerup");
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
                 userProfileRepository.save(playersProfileEntity);
 
             } else if (perKillOnGameRequest.getPrize().toLowerCase().equals("third")) {
-                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getAcBalance()) + (gameEntity.getThirdPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
 
-                playersProfileEntity.setAcBalance(Double.valueOf(calculatePerKillAmount));
+                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getWinningBalance()) + (gameEntity.getThirdPrize()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
+                playersProfileEntity.setWinningBalance(Double.valueOf(calculatePerKillAmount));
+
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
-                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getThirdPrize()+((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
+                registerUsersInGameEntityList.setTotalEarn(Double.valueOf(gameEntity.getThirdPrize() + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registerUsersInGameEntityList.setStatusInGame(gameEntity.getThirdPrize());
                 registerUsersInGameEntityList.setGameWinningStatus("third");
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
@@ -220,8 +234,9 @@ public class UserGameInfoService {
 
             } else if (perKillOnGameRequest.getPrize().toLowerCase().equals("none")) {
 
-                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getAcBalance()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
-                playersProfileEntity.setAcBalance(calculatePerKillAmount);
+                Double calculatePerKillAmount = (Double.valueOf(playersProfileEntity.getWinningBalance()) + ((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill())));
+                playersProfileEntity.setWinningBalance(calculatePerKillAmount);
+
                 registerUsersInGameEntityList.setTotalKill(registerUsersInGameEntityList.getTotalKill() + perKillOnGameRequest.getPerKill());
                 registerUsersInGameEntityList.setTotalEarn(Double.valueOf(((gameEntity.getPerKillPrize()) * (perKillOnGameRequest.getPerKill()))));
                 registrationUsersInGameRepository.save(registerUsersInGameEntityList);
@@ -263,35 +278,143 @@ public class UserGameInfoService {
         }
         PlayersProfileEntity playersProfileEntity = userProfileClassOptional.get();
 
-        MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
 
-        double remainBalance = userProfileClassOptional.get().getAcBalance() - withDrawMoneyRequest.getAmount();
-
+        List<MoneyWithdrawRequestEntity> moneyWithdrawRequestEntityList = withdrawRequestRepository.findAllByUserId(loggedUserId);
 
 
+        if (playersProfileEntity.getWinningBalance() > withDrawMoneyRequest.getAmount()) {
 
-        if (remainBalance>=100) {
+            double remainWinBalance = userProfileClassOptional.get().getWinningBalance() - withDrawMoneyRequest.getAmount();
 
-            moneyWithdrawRequestEntity.setId(uuid);
-            moneyWithdrawRequestEntity.setUserId(loggedUserId);
-            moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
-            moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
-            moneyWithdrawRequestEntity.setAuthorityProcessed(false);
-            moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
-            moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
-            moneyWithdrawRequestEntity.setCurrentBalance(userProfileClassOptional.get().getAcBalance());
 
-            withdrawRequestRepository.save(moneyWithdrawRequestEntity);
-            return new ResponseEntity<>(uuid, HttpStatus.CREATED);
+            if (moneyWithdrawRequestEntityList.isEmpty()) {
+
+                MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                moneyWithdrawRequestEntity.setId(uuid);
+                moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                moneyWithdrawRequestEntity.setCurrentBalance(remainWinBalance);
+                moneyWithdrawRequestEntity.setFlag("notapproave");
+
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+
+                withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+
+            }
+
+            else if (!moneyWithdrawRequestEntityList.isEmpty()) {
+
+                for (MoneyWithdrawRequestEntity moneyWithdrawRequestList : moneyWithdrawRequestEntityList) {
+
+                    if (moneyWithdrawRequestList.getFlag().toString().equals("notapproave")) {
+
+                        return new ResponseEntity<>("Your Previous Money With Draw Pending", HttpStatus.BAD_REQUEST);
+                    }
+
+                    else {
+
+                        MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                        moneyWithdrawRequestEntity.setId(uuid);
+                        moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                        moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                        moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                        moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                        moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                        moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                        moneyWithdrawRequestEntity.setCurrentBalance(userProfileClassOptional.get().getAcBalance());
+                        moneyWithdrawRequestEntity.setFlag("NotApproval");
+
+                        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                        addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                        resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+
+                        withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+
+                    }
+                }
+            }
+
         }
-        else {
-        throw new RuntimeException("Withdraw Request Less than 100.");
+
+        else if (playersProfileEntity.getWinningBalance() < withDrawMoneyRequest.getAmount()) {
+
+            double remainAcBalance = userProfileClassOptional.get().getAcBalance() - withDrawMoneyRequest.getAmount();
+
+            if (moneyWithdrawRequestEntityList.isEmpty()) {
+
+                if (remainAcBalance >= 100) {
+
+                    MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                    moneyWithdrawRequestEntity.setId(uuid);
+                    moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                    moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                    moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                    moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                    moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                    moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                    moneyWithdrawRequestEntity.setCurrentBalance(remainAcBalance);
+                    moneyWithdrawRequestEntity.setFlag("notapproave");
+
+                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                    addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                    resumeBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+
+                    withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+
+                }
+            }
+                else {
+
+                    for (MoneyWithdrawRequestEntity moneyWithdrawRequestList: moneyWithdrawRequestEntityList) {
+
+                        if (moneyWithdrawRequestList.getFlag().toString().equals("notapproave")) {
+
+                            return new ResponseEntity<>("Your Previous Money With Draw Pending", HttpStatus.BAD_REQUEST);
+
+                        }
+
+                        else {
+                            if (remainAcBalance >= 100) {
+
+                                MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                                moneyWithdrawRequestEntity.setId(uuid);
+                                moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                                moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                                moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                                moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                                moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                                moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                                moneyWithdrawRequestEntity.setCurrentBalance(userProfileClassOptional.get().getAcBalance());
+                                moneyWithdrawRequestEntity.setFlag("NotApproval");
+
+                                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                                addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                                resumeBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+
+                                withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+
+                            }
+
+                            else {
+                                throw new RuntimeException("Withdraw Request Less than 100.");
+
+                            }
+
+
+                        }
+                    }
+                }
+
+        }
+
+        return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }
-
-
-
-
-}
 
     public ResponseEntity<String> updateWithDrawResponse(String id) {
 
@@ -304,11 +427,7 @@ public class UserGameInfoService {
         }
 
         moneyWithdrawRequestEntity.setAuthorityProcessed(true);
-        moneyWithdrawRequestEntity.setCurrentBalance(moneyWithdrawRequestEntity.getCurrentBalance() - moneyWithdrawRequestEntity.getAmount());
-
-        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-        addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
-        resumeBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+        moneyWithdrawRequestEntity.setFlag("success");
 
         withdrawRequestRepository.save(moneyWithdrawRequestEntity);
         return new ResponseEntity<>("Okay", HttpStatus.OK);
@@ -328,7 +447,7 @@ public class UserGameInfoService {
                 LocalDateTime localDateTime = mmm.getUpdatedAt();
                 String formatDateTime = localDateTime.format(formatter);
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime,mmm.isAuthorityProcessed()));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime, mmm.isAuthorityProcessed()));
             }
 
         }
@@ -346,7 +465,6 @@ public class UserGameInfoService {
         for (MoneyWithdrawRequestEntity mmm : moneyWithdrawRequestEntityList) {
 
 
-
             if (mmm.isAuthorityProcessed() == true) {
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
@@ -354,7 +472,7 @@ public class UserGameInfoService {
                 String formatDateTime = localDateTime.format(formatter);
 
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime,mmm.isAuthorityProcessed()));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime, mmm.isAuthorityProcessed()));
             }
 
         }
@@ -374,7 +492,6 @@ public class UserGameInfoService {
         for (MoneyWithdrawRequestEntity mmm : moneyWithdrawRequestEntityList) {
 
 
-
             if (mmm.isAuthorityProcessed() == true) {
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
@@ -382,7 +499,7 @@ public class UserGameInfoService {
                 String formatDateTime = localDateTime.format(formatter);
 
                 withDrawMoneyRequestList.add(new WithDrawMoneyResponse(mmm.getId(), mmm.getPaymentGetawayName(),
-                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(),formatDateTime,mmm.isAuthorityProcessed()));
+                        mmm.getAmount(), mmm.getLastThreeDigitOfPayableMobileNo(), mmm.getName(), mmm.getCurrentBalance(), formatDateTime, mmm.isAuthorityProcessed()));
             }
 
         }
@@ -394,44 +511,36 @@ public class UserGameInfoService {
     public String getRefund(String gameId) {
 
 
-        Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+        Optional<GameEntity> gameEntity = gameRepository.findAllById(gameId);
 
-        if(!gameEntity.isPresent())
-        {
+        if (!gameEntity.isPresent()) {
             throw new ResourceNotFoundException("Game Not Found");
         }
         GameEntity gameEntityManager = gameEntity.get();
 
-        for(RegisterUsersInGameEntity registerUsersInGameEntity: gameEntity.get().getRegisterUsersInGameEntities())
-        {
-            if (gameEntityManager.getGameType().toLowerCase().equals("solo")){
+        for (RegisterUsersInGameEntity registerUsersInGameEntity : gameEntity.get().getRegisterUsersInGameEntities()) {
+            if (gameEntityManager.getGameType().toLowerCase().equals("solo")) {
 
                 int registerAmount = gameEntity.get().getEntryFee();
                 AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
                 addBalanceRequest.setAmount(Double.valueOf(registerAmount));
-                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
-            }
-
-           else if (gameEntityManager.getGameType().toLowerCase().equals("duo")){
+                addBalance(registerUsersInGameEntity.getUserId(), addBalanceRequest);
+            } else if (gameEntityManager.getGameType().toLowerCase().equals("duo")) {
 
                 int registerAmount = gameEntity.get().getEntryFee();
                 AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                addBalanceRequest.setAmount(Double.valueOf(registerAmount*2));
-                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
-            }
-
-           else if (gameEntityManager.getGameType().toLowerCase().equals("squad")){
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount * 2));
+                addBalance(registerUsersInGameEntity.getUserId(), addBalanceRequest);
+            } else if (gameEntityManager.getGameType().toLowerCase().equals("squad")) {
                 int registerAmount = gameEntity.get().getEntryFee();
                 AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
-            }
-
-           else if (gameEntityManager.getGameType().toLowerCase().equals("squadvssquad")){
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount * 4));
+                addBalance(registerUsersInGameEntity.getUserId(), addBalanceRequest);
+            } else if (gameEntityManager.getGameType().toLowerCase().equals("squadvssquad")) {
                 int registerAmount = gameEntity.get().getEntryFee();
                 AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-                addBalance(registerUsersInGameEntity.getUserId(),addBalanceRequest);
+                addBalanceRequest.setAmount(Double.valueOf(registerAmount * 4));
+                addBalance(registerUsersInGameEntity.getUserId(), addBalanceRequest);
             }
 
         }
@@ -439,44 +548,38 @@ public class UserGameInfoService {
     }
 
     public String getRefundByUserId(String gameId, String id) {
-        Optional<GameEntity> gameEntity= gameRepository.findAllById(gameId);
+        Optional<GameEntity> gameEntity = gameRepository.findAllById(gameId);
 
-        if(!gameEntity.isPresent())
-        {
+        if (!gameEntity.isPresent()) {
             throw new ResourceNotFoundException("Game Not Found");
         }
         GameEntity gameEntityManager = gameEntity.get();
 
-        if (gameEntityManager.getGameType().toLowerCase().equals("solo")){
+        if (gameEntityManager.getGameType().toLowerCase().equals("solo")) {
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
             addBalanceRequest.setAmount(Double.valueOf(registerAmount));
-            addBalanceRefund(id,addBalanceRequest);
-        }
-        else if (gameEntityManager.getGameType().toLowerCase().equals("duo")){
+            addBalanceRefund(id, addBalanceRequest);
+        } else if (gameEntityManager.getGameType().toLowerCase().equals("duo")) {
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-            addBalanceRequest.setAmount(Double.valueOf(registerAmount*2));
-            addBalanceRefund(id,addBalanceRequest);
-        }
-        else if (gameEntityManager.getGameType().toLowerCase().equals("squad")){
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount * 2));
+            addBalanceRefund(id, addBalanceRequest);
+        } else if (gameEntityManager.getGameType().toLowerCase().equals("squad")) {
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-            addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-            addBalanceRefund(id,addBalanceRequest);
-        }
-        else if (gameEntityManager.getGameType().toLowerCase().equals("squad vs squad")){
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount * 4));
+            addBalanceRefund(id, addBalanceRequest);
+        } else if (gameEntityManager.getGameType().toLowerCase().equals("squad vs squad")) {
 
             int registerAmount = gameEntity.get().getEntryFee();
             AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-            addBalanceRequest.setAmount(Double.valueOf(registerAmount*4));
-            addBalanceRefund(id,addBalanceRequest);
-        }
-
-        else {
+            addBalanceRequest.setAmount(Double.valueOf(registerAmount * 4));
+            addBalanceRefund(id, addBalanceRequest);
+        } else {
             throw new RuntimeException("Not found");
         }
 

@@ -25,5 +25,7 @@ public class UserInfoResponse {
     private int totalKill;
     private Double totalEarn;
 
+    private Double winningBalance;
+
 
 }

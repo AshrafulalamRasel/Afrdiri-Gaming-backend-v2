@@ -109,7 +109,7 @@ public class UserInfoService {
             userInfoResponse.setAcBalance(playersProfileEntity.getAcBalance());
             userInfoResponse.setMobileNo(playersProfileEntity.getMobileNo());
             userInfoResponse.setTotalKill(0);
-            userInfoResponse.setTotalEarn(0.0);
+            userInfoResponse.setTotalEarn(playersProfileEntity.getWinningBalance());
         }
 
         if(optionalRegisterUsersInGameEntity.isPresent()) {
@@ -118,8 +118,9 @@ public class UserInfoService {
             userInfoResponse.setFirstName(playersProfileEntity.getFirstName() + " " + playersProfileEntity.getLastName());
             userInfoResponse.setAcBalance(playersProfileEntity.getAcBalance());
             userInfoResponse.setMobileNo(playersProfileEntity.getMobileNo());
+            userInfoResponse.setWinningBalance(playersProfileEntity.getWinningBalance());
             userInfoResponse.setTotalKill(totalKill);
-            userInfoResponse.setTotalEarn(winningAmount);
+            userInfoResponse.setTotalEarn(playersProfileEntity.getWinningBalance());
         }
 
 
@@ -132,6 +133,5 @@ public class UserInfoService {
 
         return new ResponseEntity(userInfoResponse, HttpStatus.OK);
     }
-
 
 }

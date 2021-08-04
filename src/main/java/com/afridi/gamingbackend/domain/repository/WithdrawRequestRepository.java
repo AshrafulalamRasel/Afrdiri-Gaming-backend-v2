@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface WithdrawRequestRepository extends JpaRepository<MoneyWithdrawRequestEntity, String> {
+
     List<MoneyWithdrawRequestEntity> findAllByUserId(String id);
 
 }

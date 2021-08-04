@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "MoneyRequestEntity")
+@Table(name = "MONEY_REACHARGE_ACCOUNT")
 public class MoneyRequestEntity extends BaseEntity {
 
 

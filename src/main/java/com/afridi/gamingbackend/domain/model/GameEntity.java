@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "GameEntity")
+@Table(name = "CREATE_GAME_PROFILE")
 public class GameEntity extends BaseEntity {
 
     private String gameNumber;

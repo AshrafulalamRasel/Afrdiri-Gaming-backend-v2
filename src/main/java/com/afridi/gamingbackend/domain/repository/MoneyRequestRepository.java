@@ -12,13 +12,13 @@ import java.util.List;
 public interface MoneyRequestRepository extends JpaRepository<MoneyRequestEntity, String> {
 
     @Query(
-            value = "SELECT * FROM money_request_entity WHERE is_authority_processed = true",
+            value = "SELECT * FROM MONEY_REACHARGE_ACCOUNT WHERE is_authority_processed = true",
             nativeQuery = true)
 
     List<MoneyRequestEntity> findAllActiveBalanceRequest();
 
     @Query(
-            value = "SELECT * FROM money_request_entity WHERE is_authority_processed = false",
+            value = "SELECT * FROM MONEY_REACHARGE_ACCOUNT WHERE is_authority_processed = false",
             nativeQuery = true)
 
     List<MoneyRequestEntity> findAllInActiveBalanceRequest();

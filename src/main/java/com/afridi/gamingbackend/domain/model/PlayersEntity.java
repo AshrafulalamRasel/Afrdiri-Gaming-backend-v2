@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "PlayersEntity")
+@Table(name = "PLAYER_ADMIN_SIGNUP")
 public class PlayersEntity extends BaseEntity {
 
 

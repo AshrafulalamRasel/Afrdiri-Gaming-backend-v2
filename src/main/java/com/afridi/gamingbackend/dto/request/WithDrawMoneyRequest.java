@@ -14,6 +14,7 @@ public class WithDrawMoneyRequest {
     private String paymentGetawayName;
     private Double amount;
     private String lastThreeDigitOfPayableMobileNo;
+    private String flag;
 
 
 }

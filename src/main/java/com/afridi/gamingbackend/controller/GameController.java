@@ -7,6 +7,7 @@ import com.afridi.gamingbackend.dto.request.GameProfileUpdateRequest;
 import com.afridi.gamingbackend.dto.request.GameSetRequest;
 import com.afridi.gamingbackend.dto.request.RegistrationInGameRequest;
 import com.afridi.gamingbackend.dto.response.RoomIdAndPasswordResponse;
+import com.afridi.gamingbackend.dto.response.UserShowGamePlayer;
 import com.afridi.gamingbackend.services.GameServices;
 import com.afridi.gamingbackend.services.RoomIdService;
 import com.afridi.gamingbackend.services.UserGameInfoService;
@@ -81,5 +82,10 @@ public class GameController {
         return roomIdService.getGameRegisterUserByGameId(gameId);
     }
 
+
+    @GetMapping("/user/show/join/player/games/{gameId}")
+    public ResponseEntity<UserShowGamePlayer> userShowJoinPlayer(@PathVariable String gameId) {
+        return gameServices.userShowJoinPlayerInGame(gameId);
+    }
 
 }

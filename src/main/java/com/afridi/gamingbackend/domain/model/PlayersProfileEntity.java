@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "PlayersProfileEntity")
+@Table(name = "CREATE_PLAYER_PROFILE")
 public class PlayersProfileEntity extends BaseEntity {
 
 
@@ -27,6 +27,7 @@ public class PlayersProfileEntity extends BaseEntity {
     private String mobileNo;
 
     private Double acBalance;
+    private Double winningBalance;
     private Double reFound;
 
     @Column(name = "ISACTIVE", nullable = false)

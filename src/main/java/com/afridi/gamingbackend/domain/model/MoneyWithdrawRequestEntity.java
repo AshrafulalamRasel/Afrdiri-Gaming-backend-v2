@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "MoneyWithdrawRequestEntity")
+@Table(name = "MONEY_WITHDRAW_USER")
 public class MoneyWithdrawRequestEntity extends BaseEntity {
 
 
@@ -29,6 +29,8 @@ public class MoneyWithdrawRequestEntity extends BaseEntity {
 
     private boolean isAuthorityProcessed;
     private Double currentBalance;
+
+    private String flag;
 
 
 }

@@ -6,6 +6,7 @@ import com.afridi.gamingbackend.domain.model.PlayersProfileEntity;
 import com.afridi.gamingbackend.domain.model.RegisterUsersInGameEntity;
 import com.afridi.gamingbackend.domain.repository.*;
 import com.afridi.gamingbackend.dto.request.*;
+import com.afridi.gamingbackend.dto.response.UserShowGamePlayer;
 import com.afridi.gamingbackend.exceptionHandalling.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -102,99 +103,18 @@ public class GameServices {
 
             if (registrationInGameRequest.getPartnerType().toLowerCase().equals("solo")) {
 
-                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()) {
-                    RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
-                    registerUsersInGameEntity.setUserId(loggedUserId);
-                    registerUsersInGameEntity.setTotalEarn(0.0);
-                    registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
-                    registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
-                    registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
-                    registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
-                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
-                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
-                    registerUsersInGameEntity.setTotalKill(0);
-                    gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
-                    gameRepository.save(gameEntity);
-                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()));
-                    userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-                }
-                else {
-                    throw new RuntimeException("Insufficient Balance");
-                }
+                resumeAmountForGameJoin(registrationInGameRequest, loggedUserId, playersProfileEntity, gameEntity,1);
             }
 
             else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("duo")){
-
-                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*2){
-
-                    RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
-                    registerUsersInGameEntity.setUserId(loggedUserId);
-                    registerUsersInGameEntity.setTotalEarn(0.0);
-                    registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
-                    registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
-                    registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
-                    registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
-                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
-                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
-                    registerUsersInGameEntity.setTotalKill(0);
-                    gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
-                    gameRepository.save(gameEntity);
-                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 2);
-                    userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-                }
-                else {
-                    throw new RuntimeException("Insufficient Balance");
-                }
-
+                resumeAmountForGameJoin(registrationInGameRequest, loggedUserId, playersProfileEntity, gameEntity,2);
             }
             else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("squad")) {
-
-                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*4){
-                    RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
-                    registerUsersInGameEntity.setUserId(loggedUserId);
-                    registerUsersInGameEntity.setTotalEarn(0.0);
-                    registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
-                    registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
-                    registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
-                    registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
-                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
-                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
-                    registerUsersInGameEntity.setTotalKill(0);
-                    gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
-                    gameRepository.save(gameEntity);
-                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 4);
-                    userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-                }
-                else {
-                    throw new RuntimeException("Insufficient Balance");
-                }
+                resumeAmountForGameJoin(registrationInGameRequest, loggedUserId, playersProfileEntity, gameEntity,4);
             }
 
             else if (registrationInGameRequest.getPartnerType().toLowerCase().equals("squad vs squad")) {
-
-                if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*4){
-                    RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
-                    registerUsersInGameEntity.setUserId(loggedUserId);
-                    registerUsersInGameEntity.setTotalEarn(0.0);
-                    registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
-                    registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
-                    registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
-                    registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
-                    registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
-                    registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
-                    registerUsersInGameEntity.setTotalKill(0);
-                    gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
-                    gameRepository.save(gameEntity);
-                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                    addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()) * 4);
-                    userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
-                }
-                else {
-                    throw new RuntimeException("Insufficient Balance");
-                }
+                resumeAmountForGameJoin(registrationInGameRequest, loggedUserId, playersProfileEntity, gameEntity,4);
             }
             else {
                 throw new RuntimeException("Insufficient Balance");
@@ -206,6 +126,61 @@ public class GameServices {
             throw new RuntimeException("Already Register In Game");
         }
         return new ResponseEntity("Successfully done", HttpStatus.OK);
+    }
+
+    private void resumeAmountForGameJoin(RegistrationInGameRequest registrationInGameRequest,
+                                         String loggedUserId, PlayersProfileEntity playersProfileEntity,
+                                         GameEntity gameEntity, int numberOfPlayer) {
+
+        if (playersProfileEntity.getWinningBalance() < (gameEntity.getEntryFee()*numberOfPlayer)){
+
+            if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*numberOfPlayer) {
+                RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+                registerUsersInGameEntity.setUserId(loggedUserId);
+                registerUsersInGameEntity.setTotalEarn(0.0);
+                registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
+                registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
+                registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
+                registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
+                registerUsersInGameEntity.setTotalKill(0);
+                gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
+                gameRepository.save(gameEntity);
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()*numberOfPlayer));
+                userGameInfoService.resumeBalance(loggedUserId, addBalanceRequest);
+            }
+
+            else {
+                throw new RuntimeException("Insufficient Balance");
+            }
+        }
+
+        else
+        {
+            if (playersProfileEntity.getWinningBalance() >= gameEntity.getEntryFee()*numberOfPlayer) {
+                RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+                registerUsersInGameEntity.setUserId(loggedUserId);
+                registerUsersInGameEntity.setTotalEarn(0.0);
+                registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
+                registerUsersInGameEntity.setPartnerOneName(registrationInGameRequest.getPartnerOneName());
+                registerUsersInGameEntity.setPartnerTwoName(registrationInGameRequest.getPartnerTwoName());
+                registerUsersInGameEntity.setPartnerThreeName(registrationInGameRequest.getPartnerThreeName());
+                registerUsersInGameEntity.setPartnerNameFour(registrationInGameRequest.getPartnerNameFour());
+                registerUsersInGameEntity.setGameIdStatus(gameEntity.getId());
+                registerUsersInGameEntity.setTotalKill(0);
+                gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
+                gameRepository.save(gameEntity);
+                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()*numberOfPlayer));
+                userGameInfoService.resumeWiningBalance(loggedUserId, addBalanceRequest);
+            }
+
+            else {
+                throw new RuntimeException("Insufficient Balance");
+            }
+        }
     }
 
 
@@ -224,4 +199,24 @@ public class GameServices {
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
 
+
+    public ResponseEntity<UserShowGamePlayer> userShowJoinPlayerInGame(String gameId){
+
+        Optional<GameEntity> gameEntityOptional = gameRepository.findAllById(gameId);
+
+        long play = registrationUsersInGameRepository.countAllByGameIdStatus(gameId);
+
+        System.out.println("play"+play);
+
+        GameEntity gameEntity = gameEntityOptional.get();
+
+        UserShowGamePlayer userShowGamePlayer = new UserShowGamePlayer();
+        userShowGamePlayer.setTotalPlayerInGame(Integer.valueOf(gameEntity.getMaxPlayers()));
+        userShowGamePlayer.setTotalJoinPlayerInGame((int) play);
+
+        return new ResponseEntity(userShowGamePlayer,HttpStatus.OK);
+
+
+
+    }
 }

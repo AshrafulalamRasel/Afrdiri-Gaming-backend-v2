@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "RegisterUsersInGameEntity")
+@Table(name = "REGESTART_USER_INGAME_PROFILE")
 public class RegisterUsersInGameEntity {
 
     @Id

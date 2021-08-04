@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "AdminEntity")
+@Table(name = "ADMIN_PROFILE")
 public class AdminEntity extends BaseEntity {
 
     private String firstName;
