@@ -16,18 +16,18 @@ public interface RegistrationUsersInGameRepository extends JpaRepository<Registe
     Optional<List<RegisterUsersInGameEntity>> findAllByUserId(String id);
 
     @Query(
-            value = "SELECT * FROM  REGESTART_USER_INGAME_PROFILE WHERE f_key = ? AND user_id = ?",
+            value = "SELECT * FROM  regestart_user_ingame_profile WHERE f_key = ? AND user_id = ?",
             nativeQuery = true)
     Optional<RegisterUsersInGameEntity> findAllByUserIdAndPlayerId(@Param("f_key") String f_key,@Param("user_id") String user_id);
 
 
-    @Query(value = "SELECT * FROM  REGESTART_USER_INGAME_PROFILE WHERE f_key = ?",nativeQuery = true)
+    @Query(value = "SELECT * FROM  regestart_user_ingame_profile WHERE f_key = ?",nativeQuery = true)
     Optional<List<RegisterUsersInGameEntity>> findAllUserBygameId(@Param("f_key") String f_key);
 
-    @Query(value = "SELECT * FROM  REGESTART_USER_INGAME_PROFILE WHERE user_id = ?",nativeQuery = true)
+    @Query(value = "SELECT * FROM  regestart_user_ingame_profile WHERE user_id = ?",nativeQuery = true)
     Optional<List<RegisterUsersInGameEntity>> findAllGameByUserId(@Param("user_id") String userId);
 
 
-    @Query(value = "SELECT COUNT(*) FROM REGESTART_USER_INGAME_PROFILE  WHERE f_key=?",nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM regestart_user_ingame_profile  WHERE f_key=?",nativeQuery = true)
     long countAllByGameIdStatus(@Param("f_key") String f_key);
 }

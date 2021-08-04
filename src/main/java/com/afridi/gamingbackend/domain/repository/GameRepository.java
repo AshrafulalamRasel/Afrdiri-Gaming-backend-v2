@@ -28,10 +28,10 @@ public interface GameRepository extends JpaRepository<GameEntity, String> {
 //            value = "SELECT * FROM GAME_SERVICE u WHERE u.isactive = 0",
 //            nativeQuery = true)
 //    List<GameEntity> findAllInActiveGameNative();
-    @Query(value = "SELECT * FROM CREATE_GAME_PROFILE WHERE isactive = true", nativeQuery = true)
+    @Query(value = "SELECT * FROM create_game_profile WHERE isactive = true", nativeQuery = true)
     List<GameEntity> findAllActiveGameNative();
 
-    @Query(value = "SELECT * FROM CREATE_GAME_PROFILE WHERE isactive = false ", nativeQuery = true)
+    @Query(value = "SELECT * FROM create_game_profile WHERE isactive = false ", nativeQuery = true)
     List<GameEntity> findAllInActiveGameNative();
 
     Optional<List<GameEntity>> findAllByGameOwnerId(String id);
