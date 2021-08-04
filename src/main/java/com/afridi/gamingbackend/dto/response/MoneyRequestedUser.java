@@ -5,21 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WithDrawMoneyResponse {
+public class MoneyRequestedUser {
 
-    private String id;
+    private String name;
+
     private String paymentGetawayName;
+
     private Double amount;
-    private String lastThreeDigitOfPayableMobileNo;
-    private String userName;
-    private Double currentBalance;
-    private String updatedAt;
-    private boolean isAuthorityProcessed;
+
+    private int lastThreeDigitOfPayableMobileNo;
+
+    private String balanceStatus;
 
 }

@@ -4,6 +4,7 @@ package com.afridi.gamingbackend.services;
 import com.afridi.gamingbackend.domain.model.*;
 import com.afridi.gamingbackend.domain.repository.*;
 import com.afridi.gamingbackend.dto.request.*;
+import com.afridi.gamingbackend.dto.response.MoneyRequestedUser;
 import com.afridi.gamingbackend.dto.response.WithDrawMoneyResponse;
 import com.afridi.gamingbackend.exceptionHandalling.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -585,5 +586,30 @@ public class UserGameInfoService {
 
 
         return "added";
+    }
+
+    public ResponseEntity<List<MoneyRequestedUser>> getAllMoneyRequestedActiveUser(){
+
+        List<MoneyRequestEntity> moneyRequestEntityList = moneyRequestRepository.findAll();
+
+        List<MoneyRequestedUser> moneyRequestedUserList = new ArrayList<>();
+
+        for (MoneyRequestEntity moneyRequestEntity : moneyRequestEntityList){
+
+            if (moneyRequestEntity.isAuthorityProcessed() == true){
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
+                LocalDateTime localDateTime = moneyRequestEntity.getUpdatedAt();
+                String formatDateTime = localDateTime.format(formatter);
+                moneyRequestedUserList.add(new MoneyRequestedUser(moneyRequestEntity.getName(),
+                                                                 moneyRequestEntity.getPaymentGetawayName(),
+                                                                 moneyRequestEntity.getAmount(),
+                                                                 moneyRequestEntity.getLastThreeDigitOfPayableMobileNo(),
+                                                                 moneyRequestEntity.getBalanceStatus()));
+
+            }
+        }
+
+        return new ResponseEntity(moneyRequestedUserList,HttpStatus.OK);
     }
 }

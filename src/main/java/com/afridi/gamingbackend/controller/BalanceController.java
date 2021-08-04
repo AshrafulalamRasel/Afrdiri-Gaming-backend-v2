@@ -3,6 +3,7 @@ package com.afridi.gamingbackend.controller;
 
 import com.afridi.gamingbackend.domain.model.MoneyRequestEntity;
 import com.afridi.gamingbackend.dto.request.*;
+import com.afridi.gamingbackend.dto.response.MoneyRequestedUser;
 import com.afridi.gamingbackend.dto.response.WithDrawMoneyResponse;
 import com.afridi.gamingbackend.services.UserGameInfoService;
 import lombok.AllArgsConstructor;
@@ -98,6 +99,11 @@ public class BalanceController {
     @GetMapping("/get/withdraw/request/byUsers")
     public ResponseEntity<List<WithDrawMoneyResponse>> getAllWithDrawResponseByUsers() {
         return userGameInfoService.getMoneyMoneyWithdrawRequest();
+    }
+
+    @GetMapping("/get/money/request/byUsers")
+    public ResponseEntity<List<MoneyRequestedUser>> getAllMoneyRequested() {
+        return userGameInfoService.getAllMoneyRequestedActiveUser();
     }
 
 }
