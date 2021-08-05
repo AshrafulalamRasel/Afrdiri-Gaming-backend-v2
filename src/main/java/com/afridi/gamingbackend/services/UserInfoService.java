@@ -59,6 +59,7 @@ public class UserInfoService {
             playersProfileEntity.setLastName(userInfoRequest.getLastName());
             playersProfileEntity.setMobileNo(userInfoRequest.getMobileNo());
             playersProfileEntity.setAcBalance(0.0);
+            playersProfileEntity.setReFound(0.0);
             playersProfileEntity.setWinningBalance(0.0);
             playersProfileEntity.setIsActive(true);
             userProfileRepository.saveAndFlush(playersProfileEntity);
