@@ -287,63 +287,71 @@ public class UserGameInfoService {
 
             double remainWinBalance = userProfileClassOptional.get().getWinningBalance() - withDrawMoneyRequest.getAmount();
 
+            if (remainWinBalance > 100){
 
-            if (moneyWithdrawRequestEntityList.isEmpty()) {
+                if (moneyWithdrawRequestEntityList.isEmpty()) {
 
-                MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
-                moneyWithdrawRequestEntity.setId(uuid);
-                moneyWithdrawRequestEntity.setUserId(loggedUserId);
-                moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
-                moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
-                moneyWithdrawRequestEntity.setAuthorityProcessed(false);
-                moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
-                moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
-                moneyWithdrawRequestEntity.setCurrentBalance(remainWinBalance);
-                moneyWithdrawRequestEntity.setFlag("notapproave");
+                    MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                    moneyWithdrawRequestEntity.setId(uuid);
+                    moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                    moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                    moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                    moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                    moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                    moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                    moneyWithdrawRequestEntity.setCurrentBalance(remainWinBalance);
+                    moneyWithdrawRequestEntity.setFlag("notapproave");
 
-                AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
-                resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+                    AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                    addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                    resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
 
-                withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+                    withdrawRequestRepository.save(moneyWithdrawRequestEntity);
 
-            }
+                }
 
-            else if (!moneyWithdrawRequestEntityList.isEmpty()) {
+                else if (!moneyWithdrawRequestEntityList.isEmpty()) {
 
-                for (MoneyWithdrawRequestEntity moneyWithdrawRequestList : moneyWithdrawRequestEntityList) {
+                    for (MoneyWithdrawRequestEntity moneyWithdrawRequestList : moneyWithdrawRequestEntityList) {
 
-                    if (moneyWithdrawRequestList.getFlag().toString().equals("notapproave")) {
+                        if (moneyWithdrawRequestList.getFlag().toString().equals("notapproave")) {
 
-                        return new ResponseEntity<>("Your Previous Money With Draw Pending", HttpStatus.BAD_REQUEST);
-                    }
+                            return new ResponseEntity<>("Your Previous Money With Draw Pending", HttpStatus.BAD_REQUEST);
+                        }
 
-                    else {
+                        else {
 
-                        MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
-                        moneyWithdrawRequestEntity.setId(uuid);
-                        moneyWithdrawRequestEntity.setUserId(loggedUserId);
-                        moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
-                        moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
-                        moneyWithdrawRequestEntity.setAuthorityProcessed(false);
-                        moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
-                        moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
-                        moneyWithdrawRequestEntity.setCurrentBalance(userProfileClassOptional.get().getAcBalance());
-                        moneyWithdrawRequestEntity.setFlag("NotApproval");
+                            MoneyWithdrawRequestEntity moneyWithdrawRequestEntity = new MoneyWithdrawRequestEntity();
+                            moneyWithdrawRequestEntity.setId(uuid);
+                            moneyWithdrawRequestEntity.setUserId(loggedUserId);
+                            moneyWithdrawRequestEntity.setName(playersProfileEntity.getFirstName() + "" + playersProfileEntity.getLastName());
+                            moneyWithdrawRequestEntity.setAmount(withDrawMoneyRequest.getAmount());
+                            moneyWithdrawRequestEntity.setAuthorityProcessed(false);
+                            moneyWithdrawRequestEntity.setPaymentGetawayName(withDrawMoneyRequest.getPaymentGetawayName());
+                            moneyWithdrawRequestEntity.setLastThreeDigitOfPayableMobileNo(withDrawMoneyRequest.getLastThreeDigitOfPayableMobileNo());
+                            moneyWithdrawRequestEntity.setCurrentBalance(userProfileClassOptional.get().getAcBalance());
+                            moneyWithdrawRequestEntity.setFlag("NotApproval");
 
-                        AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
-                        addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
-                        resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
+                            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+                            addBalanceRequest.setAmount(Double.valueOf(moneyWithdrawRequestEntity.getAmount()));
+                            resumeWiningBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
 
-                        withdrawRequestRepository.save(moneyWithdrawRequestEntity);
+                            withdrawRequestRepository.save(moneyWithdrawRequestEntity);
 
+                        }
                     }
                 }
             }
 
+            else {
+
+                return new ResponseEntity("Remainning Balance Less Then 100",HttpStatus.BAD_REQUEST);
+            }
+
+
         }
 
-        else if (playersProfileEntity.getWinningBalance() < withDrawMoneyRequest.getAmount()) {
+        /*else if (playersProfileEntity.getWinningBalance() < withDrawMoneyRequest.getAmount()) {
 
             double remainAcBalance = userProfileClassOptional.get().getAcBalance() - withDrawMoneyRequest.getAmount();
 
@@ -412,7 +420,7 @@ public class UserGameInfoService {
                     }
                 }
 
-        }
+        }*/
 
         return new ResponseEntity<>(uuid, HttpStatus.CREATED);
     }
