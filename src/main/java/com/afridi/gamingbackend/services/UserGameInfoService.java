@@ -345,10 +345,12 @@ public class UserGameInfoService {
 
             else {
 
-                return new ResponseEntity("Remainning Balance Less Then 100",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Remainning Balance Less Then 100",HttpStatus.UNAUTHORIZED);
             }
 
 
+        }else{
+            return new ResponseEntity("Remainning Balance Less Then 100",HttpStatus.UNAUTHORIZED);
         }
 
         /*else if (playersProfileEntity.getWinningBalance() < withDrawMoneyRequest.getAmount()) {
