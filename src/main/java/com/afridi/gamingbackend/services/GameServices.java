@@ -203,16 +203,33 @@ public class GameServices {
     public ResponseEntity<UserShowGamePlayer> userShowJoinPlayerInGame(String gameId){
 
         Optional<GameEntity> gameEntityOptional = gameRepository.findAllById(gameId);
+        GameEntity gameEntity = gameEntityOptional.get();
 
+        int maxPlayer = 0;
         long play = registrationUsersInGameRepository.countAllByGameIdStatus(gameId);
+
+        if (gameEntity.getGameType().toString().equals("SOLO")){
+            maxPlayer = (int) (play*1);
+        }
+        else if (gameEntity.getGameType().toString().equals("DUO")){
+            maxPlayer = (int) (play*2);
+        }
+       else if (gameEntity.getGameType().toString().equals("SQUARD")){
+            maxPlayer = (int) (play*4);
+        }
+        else {
+            maxPlayer = (int) (play*4);
+        }
+
+
 
         System.out.println("play"+play);
 
-        GameEntity gameEntity = gameEntityOptional.get();
+
 
         UserShowGamePlayer userShowGamePlayer = new UserShowGamePlayer();
         userShowGamePlayer.setTotalPlayerInGame(Integer.valueOf(gameEntity.getMaxPlayers()));
-        userShowGamePlayer.setTotalJoinPlayerInGame((int) play);
+        userShowGamePlayer.setTotalJoinPlayerInGame(maxPlayer);
 
         return new ResponseEntity(userShowGamePlayer,HttpStatus.OK);
 
