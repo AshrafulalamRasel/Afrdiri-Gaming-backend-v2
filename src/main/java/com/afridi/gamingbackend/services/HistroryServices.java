@@ -44,7 +44,7 @@ public class HistroryServices {
         Optional<PlayersProfileEntity> playersProfileEntity = userProfileRepository.findAllById(ownerId);
 
         PlayersProfileEntity profileEntity = playersProfileEntity.get();
-        UserHistoryResponse userHistoryResponse = new UserHistoryResponse();
+
 
         if (!optionalPlayersEntity.isPresent()) {
             throw new RuntimeException("Not Found User!!");
@@ -52,12 +52,6 @@ public class HistroryServices {
 
         PlayersEntity playersEntity = optionalPlayersEntity.get();
 
-        userHistoryResponse.setUsername(playersEntity.getUsername());
-        userHistoryResponse.setEmail(playersEntity.getEmail());
-
-
-        userHistoryResponse.setCurrentAccount(profileEntity.getAcBalance());
-        userHistoryResponse.setReFound(profileEntity.getReFound());
 
         Optional<List<RegisterUsersInGameEntity>> registerUsersInGameEntityList = registrationUsersInGameRepository.findAllGameByUserId(ownerId);
 
@@ -65,41 +59,49 @@ public class HistroryServices {
 
             for (RegisterUsersInGameEntity registerUsersInGameEntity : registerUsersInGameEntityList.get()) {
 
-                userHistoryResponse.setGameName(registerUsersInGameEntity.getPartnerType());
-                userHistoryResponse.setPerKillInGame(registerUsersInGameEntity.getTotalKill());
-                userHistoryResponse.setIncomeInPerGame(registerUsersInGameEntity.getTotalEarn());
-                Optional<GameEntity> entityList = gameRepository.findAllById(registerUsersInGameEntity.getGameIdStatus());
+                UserHistoryResponse userHistoryResponse = new UserHistoryResponse();
+                userHistoryResponse.setUsername(playersEntity.getUsername());
+                userHistoryResponse.setEmail(playersEntity.getEmail());
+                userHistoryResponse.setCurrentAccount(profileEntity.getAcBalance());
+                userHistoryResponse.setReFound(profileEntity.getReFound());
 
-                GameEntity gameEntity = entityList.get();
+                if (registerUsersInGameEntity.getGameWinningStatus() != null) {
+                    userHistoryResponse.setGameName(registerUsersInGameEntity.getPartnerType());
+                    userHistoryResponse.setPerKillInGame(registerUsersInGameEntity.getTotalKill());
+                    userHistoryResponse.setIncomeInPerGame(registerUsersInGameEntity.getTotalEarn());
+                    Optional<GameEntity> entityList = gameRepository.findAllById(registerUsersInGameEntity.getGameIdStatus());
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
-                LocalDateTime localDateTime = gameEntity.getUpdatedAt();
-                String formatDateTime = localDateTime.format(formatter);
-                userHistoryResponse.setUpdatedAt(formatDateTime);
+                    GameEntity gameEntity = entityList.get();
 
-                if (registerUsersInGameEntity.getStatusInGame() == gameEntity.getWinnerPrize()) {
-                    userHistoryResponse.setWinningStatus("Winner");
-                }
-                if (registerUsersInGameEntity.getStatusInGame() == gameEntity.getSecondPrize()) {
-                    userHistoryResponse.setWinningStatus("First Runner Up");
-                }
-                if (registerUsersInGameEntity.getStatusInGame() == gameEntity.getThirdPrize()) {
-                    userHistoryResponse.setWinningStatus("Second Runner Up ");
-                }
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
+                    LocalDateTime localDateTime = gameEntity.getUpdatedAt();
+                    String formatDateTime = localDateTime.format(formatter);
+                    userHistoryResponse.setUpdatedAt(formatDateTime);
 
-                if (entityList.isPresent()) {
-
-                    if (gameEntity.getGameType().toLowerCase().equals("solo")) {
-                        userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee());
-                    } else if (gameEntity.getGameType().toLowerCase().equals("duo")) {
-                        userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 2);
-                    } else if (gameEntity.getGameType().toLowerCase().equals("squad")) {
-                        userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 4);
-                    } else if (gameEntity.getGameType().toLowerCase().equals("squad vs squad")) {
-                        userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 4);
+                    if (registerUsersInGameEntity.getGameWinningStatus().toString().equals("winner")) {
+                        userHistoryResponse.setWinningStatus("Winner");
                     }
+                    if (registerUsersInGameEntity.getGameWinningStatus().toString().equals("runnerup")) {
+                        userHistoryResponse.setWinningStatus("First Runner Up");
+                    }
+                    if (registerUsersInGameEntity.getGameWinningStatus().toString().equals("third")) {
+                        userHistoryResponse.setWinningStatus("Second Runner Up ");
+                    }
+
+                    if (entityList.isPresent()) {
+
+                        if (gameEntity.getGameType().toLowerCase().equals("solo")) {
+                            userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee());
+                        } else if (gameEntity.getGameType().toLowerCase().equals("duo")) {
+                            userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 2);
+                        } else if (gameEntity.getGameType().toLowerCase().equals("squad")) {
+                            userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 4);
+                        } else if (gameEntity.getGameType().toLowerCase().equals("squad vs squad")) {
+                            userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 4);
+                        }
+                    }
+                    userHistoryResponseList.add(userHistoryResponse);
                 }
-                userHistoryResponseList.add(userHistoryResponse);
             }
 
         }
