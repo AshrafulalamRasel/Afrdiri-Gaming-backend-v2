@@ -99,11 +99,12 @@ public class HistroryServices {
                         userHistoryResponse.setGamePerInvest(gameEntity.getEntryFee() * 4);
                     }
                 }
-
+                userHistoryResponseList.add(userHistoryResponse);
             }
+
         }
 
-        userHistoryResponseList.add(userHistoryResponse);
+
         return userHistoryResponseList;
     }
 
