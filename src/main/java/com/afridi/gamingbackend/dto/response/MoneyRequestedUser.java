@@ -20,5 +20,6 @@ public class MoneyRequestedUser {
     private int lastThreeDigitOfPayableMobileNo;
 
     private String balanceStatus;
+    private String updatedAt;
 
 }

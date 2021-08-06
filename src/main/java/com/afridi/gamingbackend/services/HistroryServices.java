@@ -15,10 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -72,6 +71,11 @@ public class HistroryServices {
                 Optional<GameEntity> entityList = gameRepository.findAllById(registerUsersInGameEntity.getGameIdStatus());
 
                 GameEntity gameEntity = entityList.get();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd uuuu hh:mm:ssa", Locale.ENGLISH);
+                LocalDateTime localDateTime = gameEntity.getUpdatedAt();
+                String formatDateTime = localDateTime.format(formatter);
+                userHistoryResponse.setUpdatedAt(formatDateTime);
 
                 if (registerUsersInGameEntity.getStatusInGame() == gameEntity.getWinnerPrize()) {
                     userHistoryResponse.setWinningStatus("Winner");

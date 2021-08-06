@@ -605,7 +605,7 @@ public class UserGameInfoService {
                                                                  moneyRequestEntity.getPaymentGetawayName(),
                                                                  moneyRequestEntity.getAmount(),
                                                                  moneyRequestEntity.getLastThreeDigitOfPayableMobileNo(),
-                                                                 moneyRequestEntity.getBalanceStatus()));
+                                                                 moneyRequestEntity.getBalanceStatus(),formatDateTime));
 
             }
         }
