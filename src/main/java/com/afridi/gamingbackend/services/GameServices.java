@@ -8,6 +8,7 @@ import com.afridi.gamingbackend.domain.repository.*;
 import com.afridi.gamingbackend.dto.request.*;
 import com.afridi.gamingbackend.dto.response.UserShowGamePlayer;
 import com.afridi.gamingbackend.exceptionHandalling.ResourceNotFoundException;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +124,7 @@ public class GameServices {
         }
 
         else {
-            throw new RuntimeException("Already Register In Game");
+            throw new ResourceNotFoundException("Already Register In Game");
         }
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
