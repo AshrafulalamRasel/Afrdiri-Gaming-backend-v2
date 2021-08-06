@@ -287,7 +287,7 @@ public class UserGameInfoService {
 
             double remainWinBalance = userProfileClassOptional.get().getWinningBalance() - withDrawMoneyRequest.getAmount();
 
-            if (remainWinBalance > 100){
+            if ( withDrawMoneyRequest.getAmount() > 99){
 
                 if (moneyWithdrawRequestEntityList.isEmpty()) {
 
