@@ -275,7 +275,7 @@ public class UserGameInfoService {
 
         if (!userProfileClassOptional.isPresent()) {
 
-            throw new RuntimeException("Not Here ...");
+            return new ResponseEntity<>("Not Present", HttpStatus.BAD_REQUEST);
         }
         PlayersProfileEntity playersProfileEntity = userProfileClassOptional.get();
 
@@ -399,11 +399,11 @@ public class UserGameInfoService {
                                 resumeBalance(moneyWithdrawRequestEntity.getUserId(), addBalanceRequest);
 
                                 withdrawRequestRepository.save(moneyWithdrawRequestEntity);
-
+                                return new ResponseEntity<>(uuid, HttpStatus.CREATED);
                             }
 
                             else {
-                                throw new RuntimeException("Withdraw Request Less than 100.");
+                                return new ResponseEntity<>("Withdraw Request Less than 100.", HttpStatus.BAD_REQUEST);
 
                             }
 
