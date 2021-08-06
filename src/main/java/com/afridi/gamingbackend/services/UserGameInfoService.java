@@ -283,7 +283,7 @@ public class UserGameInfoService {
         List<MoneyWithdrawRequestEntity> moneyWithdrawRequestEntityList = withdrawRequestRepository.findAllByUserId(loggedUserId);
 
 
-        if (playersProfileEntity.getWinningBalance() > withDrawMoneyRequest.getAmount()) {
+        if (playersProfileEntity.getWinningBalance() >= withDrawMoneyRequest.getAmount()) {
 
             double remainWinBalance = userProfileClassOptional.get().getWinningBalance() - withDrawMoneyRequest.getAmount();
 
