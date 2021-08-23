@@ -17,7 +17,6 @@ import javax.persistence.*;
 public class RegisterUsersInGameEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "playerDetails_id")
     @JsonIgnore
     private Long playerDetails_id;

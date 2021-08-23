@@ -69,7 +69,7 @@ public class UserGameInfoService {
             throw new ResourceNotFoundException("User Not Found By User Id");
         }
         PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
-        playersProfileEntity.setAcBalance(playersProfileEntity.getAcBalance() + addBalanceRequest.getAmount());
+        playersProfileEntity.setWinningBalance(playersProfileEntity.getWinningBalance() + addBalanceRequest.getAmount());
         playersProfileEntity.setReFound(addBalanceRequest.getAmount());
         userProfileRepository.save(playersProfileEntity);
 

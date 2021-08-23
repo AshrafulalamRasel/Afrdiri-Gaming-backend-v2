@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,6 +29,7 @@ public class GameServices {
     private final SignUpAndSignInService signUpAndSignInService;
     private final PlayingPartnerDetailsRepository playingPartnerDetailsRepository;
     private final RegistrationUsersInGameRepository registrationUsersInGameRepository;
+
 
     public ResponseEntity<String> adminCreateGame(GameSetRequest gameSetRequest) {
 
@@ -80,6 +82,8 @@ public class GameServices {
 
 
     public ResponseEntity<String> registration(String gameId, RegistrationInGameRequest registrationInGameRequest) {
+
+
 
         boolean isAlreadyRegistered = false;
 
@@ -134,9 +138,12 @@ public class GameServices {
                                          GameEntity gameEntity, int numberOfPlayer) {
 
 
-        if (gameEntity.getEntryFee() == 0){
+        if (gameEntity.getEntryFee() == 0 && playersProfileEntity.getWinningBalance() > 0){
 
             RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+
+
+            registerUsersInGameEntity.setPlayerDetails_id(getIdentificationLogid());
             registerUsersInGameEntity.setUserId(loggedUserId);
             registerUsersInGameEntity.setTotalEarn(0.0);
             registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
@@ -148,11 +155,15 @@ public class GameServices {
             registerUsersInGameEntity.setTotalKill(0);
             gameEntity.getRegisterUsersInGameEntities().add(registerUsersInGameEntity);
             gameRepository.save(gameEntity);
+            AddBalanceRequest addBalanceRequest = new AddBalanceRequest();
+            addBalanceRequest.setAmount(Double.valueOf(gameEntity.getEntryFee()*numberOfPlayer));
+            userGameInfoService.resumeWiningBalance(loggedUserId, addBalanceRequest);
 
         }
         else if (playersProfileEntity.getWinningBalance() >= gameEntity.getEntryFee()*numberOfPlayer) {
 
             RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+            registerUsersInGameEntity.setPlayerDetails_id(getIdentificationLogid());
             registerUsersInGameEntity.setUserId(loggedUserId);
             registerUsersInGameEntity.setTotalEarn(0.0);
             registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
@@ -173,7 +184,9 @@ public class GameServices {
         else if (playersProfileEntity.getWinningBalance() < (gameEntity.getEntryFee()*numberOfPlayer)) {
 
             if (playersProfileEntity.getAcBalance() >= gameEntity.getEntryFee()*numberOfPlayer) {
+
                 RegisterUsersInGameEntity registerUsersInGameEntity = new RegisterUsersInGameEntity();
+                registerUsersInGameEntity.setPlayerDetails_id(getIdentificationLogid());
                 registerUsersInGameEntity.setUserId(loggedUserId);
                 registerUsersInGameEntity.setTotalEarn(0.0);
                 registerUsersInGameEntity.setPartnerType(registrationInGameRequest.getPartnerType());
@@ -306,5 +319,11 @@ public class GameServices {
 
 
 
+    }
+
+    public Long getIdentificationLogid(){
+        Random random = new Random();
+        int randomWithNextInt = random.nextInt();
+        return Long.valueOf(randomWithNextInt) ;
     }
 }
