@@ -69,7 +69,7 @@ public class UserGameInfoService {
             throw new ResourceNotFoundException("User Not Found By User Id");
         }
         PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
-        playersProfileEntity.setAcBalance(playersProfileEntity.getAcBalance() + addBalanceRequest.getAmount());
+        playersProfileEntity.setWinningBalance(playersProfileEntity.getWinningBalance() + addBalanceRequest.getAmount());
         playersProfileEntity.setReFound(addBalanceRequest.getAmount());
         userProfileRepository.save(playersProfileEntity);
 
@@ -94,8 +94,20 @@ public class UserGameInfoService {
             throw new ResourceNotFoundException("User Not Found By User Id");
         }
         PlayersProfileEntity playersProfileEntity = optionalUserProfileClass.get();
-        playersProfileEntity.setWinningBalance(playersProfileEntity.getWinningBalance() - addBalanceRequest.getAmount());
-        userProfileRepository.save(playersProfileEntity);
+
+        double balanceAvailable = playersProfileEntity.getWinningBalance() - addBalanceRequest.getAmount();
+
+        if (balanceAvailable > 0){
+
+            playersProfileEntity.setWinningBalance(balanceAvailable);
+            userProfileRepository.save(playersProfileEntity);
+
+        }
+        else {
+            return new ResponseEntity("Successfully done", HttpStatus.FORBIDDEN);
+        }
+
+
 
         return new ResponseEntity("Successfully done", HttpStatus.OK);
     }
@@ -287,7 +299,7 @@ public class UserGameInfoService {
 
             double remainWinBalance = userProfileClassOptional.get().getWinningBalance() - withDrawMoneyRequest.getAmount();
 
-            if ( withDrawMoneyRequest.getAmount() > 99){
+            if (remainWinBalance >= 0){
 
                 if (moneyWithdrawRequestEntityList.isEmpty()) {
 
