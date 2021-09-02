@@ -97,7 +97,7 @@ public class UserGameInfoService {
 
         double balanceAvailable = playersProfileEntity.getWinningBalance() - addBalanceRequest.getAmount();
 
-        if (balanceAvailable > 0){
+        if (balanceAvailable >= 0){
 
             playersProfileEntity.setWinningBalance(balanceAvailable);
             userProfileRepository.save(playersProfileEntity);
