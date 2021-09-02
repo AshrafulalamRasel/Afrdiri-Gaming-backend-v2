@@ -3,7 +3,7 @@ pipeline {
 
 //small changes
      triggers {
-             // Every 10 min
+             // Every 5 min
              pollSCM 'H/5 * * * *'
       }
 
