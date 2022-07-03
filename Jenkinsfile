@@ -53,13 +53,13 @@ pipeline {
 
     post {
                 success {
-                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited' message: "Build SUCCESSFUL - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited', message: "Build SUCCESSFUL - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
                 }
                 failure {
-                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited' message: "Build FAILED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited', message: "Build FAILED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
                 }
                 aborted {
-                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited' message: "Build ABORTED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                    slackSend channel: 'learn-jenkins', teamDomain: 'webxgloballimited', message: "Build ABORTED - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
                 }
          }
 
