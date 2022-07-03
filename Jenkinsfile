@@ -8,7 +8,7 @@ pipeline {
       }
 
      tools {
-        maven '3.8.1'
+        maven 'Maven_3'
      }
 
     stages {
